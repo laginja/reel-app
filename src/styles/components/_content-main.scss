@@ -1,0 +1,12 @@
+.content-main {
+    display: flex;
+    justify-content: stretch;
+}
+
+.content-main__item-narrow {
+    flex: 1;
+}
+
+.content-main__item-wide {
+    flex: 2;
+}

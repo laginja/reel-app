@@ -1,0 +1,30 @@
+.list-body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-bottom: $m-size;
+
+    @media (min-width: $desktop-breakpoint) {
+        flex-direction: row;
+        justify-content: stretch;
+        margin-bottom: $l-size;
+    }
+}
+
+.list-item {
+    border: 1px solid darken($off-white, 7%);
+    color: $dark-grey;
+    padding: $s-size;
+    text-decoration: none;
+    transition: background .3s ease;
+    &:hover {
+        background: $off-white;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        flex: 1;
+        padding: $m-size;
+        min-width: 25%;
+        max-width: 25%;
+    }
+}
