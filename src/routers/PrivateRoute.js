@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { firebase } from '../firebase/firebase';
+import AuthContext from '../context/auth-context';
 import Header from '../components/Header';
 import RecommendedAuditions from '../components/RecommendedAuditions';
 import RecommendedProfiles from '../components/RecommendedProfiles';
 
 const PrivateRoute = ({ component: Component, ...rest}) => {
+    const { currentUser } = useContext(AuthContext);
+
     return (
         <Route {...rest} component={(props) => (
-            firebase.auth().currentUser ? (
+            !!currentUser ? (
                 <div>
                     <Header />
                     <div className="content-container-full">

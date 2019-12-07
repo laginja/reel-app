@@ -3,6 +3,7 @@ import NoteApp from './NoteApp';
 
 const Main = () => {
     const [selection, setSelection] = useState('auditions');
+    
     return (
         <div className="main">
             <div className="main__navigation">

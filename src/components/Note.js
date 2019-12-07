@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
+import AuthContext from '../context/auth-context';
 import NotesContex from '../context/notes-context';
 import { startRemoveNote } from '../actions/notes'
 
 const Note = ({ note }) => {
     const { dispatchNotes } = useContext(NotesContex)
-
+    /* get user that is logged-in */
+    const { currentUser } = useContext(AuthContext)
     const removeNote = () => {
-        startRemoveNote({ dispatchNotes, note})
+        startRemoveNote({ dispatchNotes, note, currentUser})
     }
 
     return (

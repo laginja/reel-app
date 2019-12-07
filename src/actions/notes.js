@@ -1,6 +1,4 @@
 import database from '../firebase/firebase';
-import { firebase } from '../firebase/firebase';
-
 
 /*  Action generators
 
@@ -20,11 +18,11 @@ export const addNote =  (note) => {
 };
 
 /* ASYNC action that is responsible for adding data to firebase */
-export const startAddNote = (dispatchNotes, {title = '', body = ''}) => {
+export const startAddNote = (dispatchNotes, {title = '', body = ''}, currentUser) => {
     const note = { title, body };
 
     /* get uid from the logged in user */
-    const uid = firebase.auth().currentUser.uid;
+    const uid = currentUser.uid;
 
     /* consider returning this promise for later usage */
     database.ref(`users/${uid}/notes/`).push(note).then((ref) => {
@@ -45,9 +43,9 @@ export const removeNote = ({ id }) => {
 };
 
 /* ASYNC action that is responsible for removing data from firebase */
-export const startRemoveNote = ({ dispatchNotes, note = {} }) => {
+export const startRemoveNote = ({ dispatchNotes, note = {}, currentUser }) => {
     /* get uid from the logged in user */
-    const uid = firebase.auth().currentUser.uid;
+    const uid = currentUser.uid;
 
     const { id } = note
     /* consider returning this promise for later usage */
@@ -65,9 +63,9 @@ export const setNotes = (notes) => {
 };
 
 /* ASYNC action that is responsible for fetching data from firebase */
-export const startSetNotes = ({ dispatchNotes }) => {
+export const startSetNotes = ({ dispatchNotes, currentUser }) => {
     /* get uid from the logged in user */
-    const uid = firebase.auth().currentUser.uid;
+    const uid = currentUser.uid;
 
     return database.ref(`users/${uid}/notes`).once('value').then((snapshot) => {
         const notes = [];
