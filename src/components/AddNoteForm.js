@@ -10,13 +10,15 @@ const AddNoteForm = () => {
 
         'useState' uses 'useReducer' in the BG
     */
-    const [title, setTitle] = useState('')
-    const [body, setBody] = useState('')
-    const [error, setError] = useState('')
-
-    const { dispatchNotes } = useContext(NotesContext)
     /* get user that is logged-in */
     const { currentUser } = useContext(AuthContext)
+
+    /* get dispatchNotes function from the NotesContext */
+    const { dispatchNotes } = useContext(NotesContext)
+
+    const [title, setTitle] = useState('')
+    const [body, setBody] = useState('')
+    const [error, setError] = useState('') 
 
     const addNote = (e) => {
         e.preventDefault()

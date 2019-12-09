@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import AuthContext from '../context/auth-context';
+import { firebase } from '../firebase/firebase';
 
 const PublicRoute = ({ component: Component, ...rest}) => {
     /* get user that is logged-in */
-    const { currentUser } = useContext(AuthContext);
+    const currentUser = firebase.auth().currentUser
 
     return (
         <Route {...rest} component={(props) => (

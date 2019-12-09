@@ -18,7 +18,7 @@ export const addNote =  (note) => {
 };
 
 /* ASYNC action that is responsible for adding data to firebase */
-export const startAddNote = (dispatchNotes, {title = '', body = ''}, currentUser) => {
+export const startAddNote = (dispatchNotes, {title = '', body = ''}, currentUser ) => {
     const note = { title, body };
 
     /* get uid from the logged in user */
@@ -43,7 +43,7 @@ export const removeNote = ({ id }) => {
 };
 
 /* ASYNC action that is responsible for removing data from firebase */
-export const startRemoveNote = ({ dispatchNotes, note = {}, currentUser }) => {
+export const startRemoveNote = (dispatchNotes, note = {}, currentUser) => {
     /* get uid from the logged in user */
     const uid = currentUser.uid;
 
@@ -63,7 +63,7 @@ export const setNotes = (notes) => {
 };
 
 /* ASYNC action that is responsible for fetching data from firebase */
-export const startSetNotes = ({ dispatchNotes, currentUser }) => {
+export const startSetNotes = (dispatchNotes, currentUser) => {
     /* get uid from the logged in user */
     const uid = currentUser.uid;
 
