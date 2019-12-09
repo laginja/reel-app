@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import AuthContext from '../context/auth-context';
-import NotesContext from '../context/notes-context';
-import { startAddNote } from '../actions/notes';
+import AuditionsContext from '../context/audition-context';
+import { startAddAudition } from '../actions/auditions';
 
-const AddNoteForm = () => {
+const AddAuditionForm = () => {
     /* 
         'useState()' returns an array with 2 items -> 1st current state value that's gonna change over time, 
         2nd is a function we can call to update the state.
@@ -13,21 +13,21 @@ const AddNoteForm = () => {
     /* get user that is logged-in */
     const { currentUser } = useContext(AuthContext)
 
-    /* get dispatchNotes function from the NotesContext */
-    const { dispatchNotes } = useContext(NotesContext)
+    /* get dispatchAuditions function from the AuditionsContext */
+    const { dispatchAuditions } = useContext(AuditionsContext)
 
     const [title, setTitle] = useState('')
     const [body, setBody] = useState('')
     const [error, setError] = useState('') 
 
-    const addNote = (e) => {
+    const addAudition = (e) => {
         e.preventDefault()
 
         /* check for title and body */
         if (!title || !body) {
             setError('Please provide a title and a body')
         } else {
-            startAddNote(dispatchNotes, { title, body}, currentUser)
+            startAddAudition(dispatchAuditions, { title, body}, currentUser)
             setTitle('')
             setBody('')
             setError('')
@@ -37,13 +37,13 @@ const AddNoteForm = () => {
     return (
         <div>
             { error && <p>{error}</p>}
-            <form onSubmit={addNote}>
+            <form onSubmit={addAudition}>
                 <input value={title} onChange={(e) => setTitle(e.target.value)} />
                 <textarea value={body} onChange={(e) => setBody(e.target.value)}></textarea>
-                <button>Add note</button>
+                <button>Add audition</button>
             </form>
         </div>
     )
 }
 
-export { AddNoteForm as default }
+export { AddAuditionForm as default }

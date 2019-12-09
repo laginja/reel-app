@@ -5,7 +5,7 @@ const LoginPage = () => {
     return (
         <div>
             <h1>Login Page</h1>
-            <p>Save notes like a pro</p>
+            <p>Find auditions near you</p>
             <button onClick={startLogin}>Login with Google</button>
         </div>
     )

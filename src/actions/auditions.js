@@ -9,74 +9,74 @@ import database from '../firebase/firebase';
     function runs (has the ability to dispatch other actions and do whatever it wants) 
 */
 
-/* AddNote - return an object that gets dispatched to change the state */
-export const addNote =  (note) => {
+/* AddAudition - return an object that gets dispatched to change the state */
+export const addAudition =  (audition) => {
     return {
-        type: 'ADD_NOTE',
-        note: note
+        type: 'ADD_AUDITION',
+        audition: audition
     }
 };
 
 /* ASYNC action that is responsible for adding data to firebase */
-export const startAddNote = (dispatchNotes, {title = '', body = ''}, currentUser ) => {
-    const note = { title, body };
+export const startAddAudition = (dispatchAuditions, {title = '', body = ''}, currentUser ) => {
+    const audition = { title, body };
 
     /* get uid from the logged in user */
     const uid = currentUser.uid;
 
     /* consider returning this promise for later usage */
-    database.ref(`users/${uid}/notes/`).push(note).then((ref) => {
+    database.ref(`users/${uid}/notes/`).push(audition).then((ref) => {
         //  after the data if pushed, call dispatch to add data to redux store
-        dispatchNotes(addNote({
+        dispatchAuditions(addAudition({
             id: ref.key,
-            ...note
+            ...audition
         }));
     });
 };
 
-/* RemoveNote - return an object that gets dispatched to change the state */
-export const removeNote = ({ id }) => {
+/* RemoveAudition - return an object that gets dispatched to change the state */
+export const removeAudition = ({ id }) => {
     return {
-        type: 'REMOVE_NOTE',
+        type: 'REMOVE_AUDITION',
         id: id
     }
 };
 
 /* ASYNC action that is responsible for removing data from firebase */
-export const startRemoveNote = (dispatchNotes, note = {}, currentUser) => {
+export const startRemoveAudition = (dispatchAuditions, audition = {}, currentUser) => {
     /* get uid from the logged in user */
     const uid = currentUser.uid;
 
-    const { id } = note
+    const { id } = audition
     /* consider returning this promise for later usage */
     database.ref(`users/${uid}/notes/${id}`).remove().then(() =>{
-        dispatchNotes(removeNote({ id }));
+        dispatchAuditions(removeAudition({ id }));
     });
 }; 
 
-/* SetNote - return an object that gets dispatched to change the state */
-export const setNotes = (notes) => {
+/* SetAuditions - return an object that gets dispatched to change the state */
+export const setAuditions = (auditions) => {
     return {
-        type: 'POPULATE_NOTES',
-        notes: notes
+        type: 'POPULATE_AUDITIONS',
+        auditions: auditions
     };
 };
 
 /* ASYNC action that is responsible for fetching data from firebase */
-export const startSetNotes = (dispatchNotes, currentUser) => {
+export const startSetAuditions = (dispatchAuditions, currentUser) => {
     /* get uid from the logged in user */
     const uid = currentUser.uid;
 
     return database.ref(`users/${uid}/notes`).once('value').then((snapshot) => {
-        const notes = [];
+        const auditions = [];
 
         snapshot.forEach((childSnapshot) => {
-            notes.push({
+            auditions.push({
                 id: childSnapshot.key,
                 ...childSnapshot.val()
             });
         });
-        dispatchNotes(setNotes(notes))
+        dispatchAuditions(setAuditions(auditions))
     });
 };
 

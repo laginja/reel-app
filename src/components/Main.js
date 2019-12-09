@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NoteApp from './NoteApp';
+import AuditionApp from './AuditionApp';
 import RecommendedAuditions from '../components/RecommendedAuditions';
 import RecommendedProfiles from '../components/RecommendedProfiles';
 
@@ -20,7 +20,7 @@ const Main = () => {
                             <button className="button" onClick={() => setSelection('people')}>People</button>
                         </div>
                         <div>
-                            { selection === 'auditions' ? <NoteApp /> : <div><h1>People component</h1></div>}    
+                            { selection === 'auditions' ? <AuditionApp /> : <div><h1>People component</h1></div>}    
                         </div>
                     </div>
                 </div>
