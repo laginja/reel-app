@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Audition from './Audition';
+import AuditionListItem from './AuditionListItem';
 import AuditionsContext from '../context/audition-context';
 import selectAuditions from '../selectors/auditions';
 
@@ -13,7 +13,7 @@ const AuditionList = () => {
                 <p>0 auditions</p>
             ) : (
                 auditionsFiltered.map((audition) => (
-                    <Audition key={audition.id} audition={audition} />
+                    <AuditionListItem key={audition.id} audition={audition} />
                 ))
             )}
         </div>

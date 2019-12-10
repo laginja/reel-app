@@ -9,7 +9,9 @@ const auditionsReducer = (state, action) => {
                 action.audition
             ];
         case 'REMOVE_AUDITION':
-            return state.filter((audition) => audition.id !== action.id)
+            return state.filter((audition) => audition.id !== action.id);
+        case 'FIND_AUDITION':
+            return action.audition;
         default:
             return state;
     }

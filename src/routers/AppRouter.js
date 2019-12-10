@@ -4,7 +4,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 import AuditionPage from '../components/AuditionPage';
 import LoginPage from '../components/LoginPage';
-import Main from '../components/Main';
+import ReelsDashboardPage from '../components/ReelsDashboardPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -18,7 +18,7 @@ const AppRouter = () => {
             <div>
                 <Switch>
                     <PublicRoute path="/" component={LoginPage} exact={true} />
-                    <PrivateRoute path="/index" component={Main} exact={true}/>
+                    <PrivateRoute path="/index" component={ReelsDashboardPage} exact={true}/>
                     <PrivateRoute path="/user/:id" component={UserProfilePage} />
                     <PrivateRoute path="/audition/:id" component={AuditionPage} />
                     <Route component={NotFoundPage}/>

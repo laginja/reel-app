@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { firebase } from '../firebase/firebase';
 import AuthContext from '../context/auth-context';
 import Header from '../components/Header';
+import RecommendedAuditions from '../components/RecommendedAuditions';
 
 const PrivateRoute = ({ component: Component, ...rest}) => {
     /* get user that is logged-in */
@@ -14,7 +15,12 @@ const PrivateRoute = ({ component: Component, ...rest}) => {
                 !!currentUser ? (
                     <div>
                         <Header />
-                        <Component {...props}/> 
+                        <div className="content-container-full">
+                            <div className="content-main">
+                                <RecommendedAuditions />
+                                <Component {...props}/>    
+                            </div>
+                        </div> 
                     </div>
                 ) : (
                     <Redirect to='/' />

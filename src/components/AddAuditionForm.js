@@ -23,11 +23,13 @@ const AddAuditionForm = () => {
     const addAudition = (e) => {
         e.preventDefault()
 
+        const { uid } = currentUser;
+
         /* check for title and body */
         if (!title || !body) {
             setError('Please provide a title and a body')
         } else {
-            startAddAudition(dispatchAuditions, { title, body}, currentUser)
+            startAddAudition(dispatchAuditions, { title, body, uid })
             setTitle('')
             setBody('')
             setError('')

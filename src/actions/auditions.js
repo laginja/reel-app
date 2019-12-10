@@ -18,14 +18,11 @@ export const addAudition =  (audition) => {
 };
 
 /* ASYNC action that is responsible for adding data to firebase */
-export const startAddAudition = (dispatchAuditions, {title = '', body = ''}, currentUser ) => {
-    const audition = { title, body };
-
-    /* get uid from the logged in user */
-    const uid = currentUser.uid;
+export const startAddAudition = (dispatchAuditions, { title = '', body = '', uid: ownerId = null }) => {
+    const audition = { title, body, ownerId }
 
     /* consider returning this promise for later usage */
-    database.ref(`users/${uid}/notes/`).push(audition).then((ref) => {
+    database.ref(`auditions/`).push(audition).then((ref) => {
         //  after the data if pushed, call dispatch to add data to redux store
         dispatchAuditions(addAudition({
             id: ref.key,
@@ -43,13 +40,10 @@ export const removeAudition = ({ id }) => {
 };
 
 /* ASYNC action that is responsible for removing data from firebase */
-export const startRemoveAudition = (dispatchAuditions, audition = {}, currentUser) => {
-    /* get uid from the logged in user */
-    const uid = currentUser.uid;
-
+export const startRemoveAudition = (dispatchAuditions, audition = {}) => {
     const { id } = audition
     /* consider returning this promise for later usage */
-    database.ref(`users/${uid}/notes/${id}`).remove().then(() =>{
+    database.ref(`auditions/${id}`).remove().then(() =>{
         dispatchAuditions(removeAudition({ id }));
     });
 }; 
@@ -63,11 +57,9 @@ export const setAuditions = (auditions) => {
 };
 
 /* ASYNC action that is responsible for fetching data from firebase */
-export const startSetAuditions = (dispatchAuditions, currentUser) => {
-    /* get uid from the logged in user */
-    const uid = currentUser.uid;
+export const startSetAuditions = (dispatchAuditions) => {
 
-    return database.ref(`users/${uid}/notes`).once('value').then((snapshot) => {
+    return database.ref(`auditions/`).once('value').then((snapshot) => {
         const auditions = [];
 
         snapshot.forEach((childSnapshot) => {
@@ -80,3 +72,20 @@ export const startSetAuditions = (dispatchAuditions, currentUser) => {
     });
 };
 
+/* SetAuditions - return an object that gets dispatched to change the state */
+export const fetchAudition = (audition) => {
+    return {
+        type: 'FIND_AUDITION',
+        audition: audition
+    };
+};
+
+/* DOES THIS NEED A STATE ??? */
+
+/* ASYNC action that is responsible for fetching data from firebase */
+export const startFetchAudition = (id = null, dispatchAudition) => {
+    
+    return database.ref(`auditions/${id}`).once('value').then((snapshot) => {
+        dispatchAudition(fetchAudition(snapshot.val()))
+    });
+};

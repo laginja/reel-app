@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import AuthContext from '../context/auth-context';
+//import AuthContext from '../context/auth-context';
 import AuditionsContext from '../context/audition-context';
 import { startRemoveAudition } from '../actions/auditions';
 
-const Audition = ({ audition }) => {
+const AuditionListItem = ({ audition }) => {
     /* get dispatchAuditions function from the AuditionsContext */
     const { dispatchAuditions } = useContext(AuditionsContext)
     /* get user that is logged-in */
-    const { currentUser } = useContext(AuthContext)
+    //const { currentUser } = useContext(AuthContext)
 
     const removeAudition = () => {
-        startRemoveAudition(dispatchAuditions, audition, currentUser)
+        startRemoveAudition(dispatchAuditions, audition)
     }
 
     return (
@@ -24,4 +24,4 @@ const Audition = ({ audition }) => {
     )
 }
 
-export { Audition as default }
+export { AuditionListItem as default }

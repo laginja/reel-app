@@ -2,8 +2,10 @@ import React from 'react';
 
 const RecommendedAuditions = () => {
     return (
-        <div>
-            <h3>RecommendedAuditions</h3>
+        <div className="content-main__item-narrow border-right">
+            <div>
+                <h3>RecommendedAuditions</h3>
+            </div>
         </div>
     )
 }
