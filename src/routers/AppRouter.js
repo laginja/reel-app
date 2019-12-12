@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 // we use this function to create our own history
 import createHistory from 'history/createBrowserHistory';
+import AddAuditionPage from '../components/AddAuditionPage';
 import AuditionPage from '../components/AuditionPage';
 import LoginPage from '../components/LoginPage';
 import ReelsDashboardPage from '../components/ReelsDashboardPage';
@@ -19,6 +20,7 @@ const AppRouter = () => {
                 <Switch>
                     <PublicRoute path="/" component={LoginPage} exact={true} />
                     <PrivateRoute path="/index" component={ReelsDashboardPage} exact={true}/>
+                    <PrivateRoute path="/createAudition" component={AddAuditionPage} />
                     <PrivateRoute path="/user/:id" component={UserProfilePage} />
                     <PrivateRoute path="/audition/:id" component={AuditionPage} />
                     <Route component={NotFoundPage}/>

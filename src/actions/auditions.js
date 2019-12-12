@@ -18,16 +18,28 @@ export const addAudition =  (audition) => {
 };
 
 /* ASYNC action that is responsible for adding data to firebase */
-export const startAddAudition = (dispatchAuditions, { title = '', body = '', uid: ownerId = null }) => {
-    const audition = { title, body, ownerId }
+export const startAddAudition = (auditionData = {}) => {
+    const { 
+        title = '', 
+        description = '', 
+        createdAt = 0,
+        category = '',
+        auditionDate = 0,
+        location = '',
+        paid = 'false',
+        crewMembers = [],
+        ownerId = null 
+    } = auditionData;
+    
+    const audition = { title, description, createdAt, category, auditionDate, location, paid, crewMembers, ownerId }
 
     /* consider returning this promise for later usage */
     database.ref(`auditions/`).push(audition).then((ref) => {
         //  after the data if pushed, call dispatch to add data to redux store
-        dispatchAuditions(addAudition({
+        /* dispatchAuditions(addAudition({
             id: ref.key,
             ...audition
-        }));
+        })); */
     });
 };
 

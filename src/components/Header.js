@@ -17,6 +17,9 @@ const Header = () => {
                     <h3 className="header__title">
                         Welcome, { currentUser.displayName }
                     </h3>
+                    <Link className="header__title" to="/createAudition">
+                        <h3>Create Audition</h3>
+                    </Link>
                     <button className="button button--link" onClick={startLogout}>Logout</button>
                 </div>   
             </div>

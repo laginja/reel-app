@@ -15,7 +15,7 @@ const AuditionPage = (props) => {
         startFetchAudition(id, dispatchAudition).then(() => {
             setAuditionLoaded(true)
         })
-    }, [])
+    }, [id])
 
     return (
         <div className="content-main__item-wide">
