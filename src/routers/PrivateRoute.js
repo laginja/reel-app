@@ -17,12 +17,8 @@ const PrivateRoute = ({ component: Component, ...rest}) => {
                         <Header />
                         <div className="content-container-full">
                             <div className="content-main">
-                                <div className="content-main__item-narrow border-right">
-                                    <RecommendedAuditions />
-                                </div>
-                                <div className="content-main__item-wide">
-                                    <Component {...props}/>    
-                                </div>
+                                <RecommendedAuditions />
+                                <Component {...props}/>    
                             </div>
                         </div> 
                     </div>

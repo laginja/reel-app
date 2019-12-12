@@ -4,7 +4,7 @@ import { startAddAudition } from '../actions/auditions';
 
 const AddAuditionPage = (props) => {
     return (
-        <div className="main">
+        <div className="content-main__item-wide">
             <h3>New audition</h3>
             <AuditionForm 
                 onSubmit={(audition) => {
