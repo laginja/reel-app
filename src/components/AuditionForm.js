@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import AuthContext from '../context/auth-context';
-import CatInputs from './CatInputs';
+import CrewMembersInput from './CrewMembersInput';
 import 'react-dates/lib/css/_datepicker.css'
 import 'react-dates/initialize' // imported to clear the error I was getting
 
@@ -20,17 +20,15 @@ const AuditionForm = (props) => {
     const [description, setDescription] = useState('')
     const [createdAt, setCreatedAt] = useState(moment())
     const [category, setCategory] = useState('')
-    const [auditionDate, setAuditionDate] = useState('') 
+    const [auditionDate, setAuditionDate] = useState() 
     const [calendarFocused, setCalendarFocus] = useState(false)
     const [location, setLocation] = useState('')  
     const [paid, setPaid] = useState(false) 
     const [error, setError] = useState('') 
 
     /* create state for crew members array */
-    const blankCat = { name: '', age: '' };
-    const [catState, setCatState] = useState([
-        { ...blankCat },
-    ]);
+    const blankCrewMember = { id: '', job: '', description: '' };
+    const [crewMembers, setCrewMembers] = useState([]);
 
     const onDateChange = (auditionDate) => {
         if (auditionDate) {
@@ -42,16 +40,21 @@ const AuditionForm = (props) => {
         setCalendarFocus(focused)
     };
 
-
-    const addCat = () => {
-        setCatState([...catState, { ...blankCat }]);
+    /* Add Crew members */
+    const addCrewMember = (e) => {
+        e.preventDefault()
+        setCrewMembers([ ...crewMembers, { ...blankCrewMember }]);
     };
 
-    const handleCatChange = (e) => {
+    const removeCrewMember = (crewMember) => {
+        setCrewMembers(crewMembers.filter((member) => member.id !== crewMember.id));
+    };
+
+    const handleCrewMemberChange = (e) => {
         e.preventDefault()
-        const updatedCats = [...catState];
-        updatedCats[e.target.dataset.idx][e.target.className] = e.target.value;
-        setCatState(updatedCats);
+        const updatedCrewMembers = [ ...crewMembers ];
+        updatedCrewMembers[e.target.dataset.idx][e.target.className] = e.target.value;
+        setCrewMembers(updatedCrewMembers);
     };
 
     const onSubmit = (e) => {
@@ -71,7 +74,7 @@ const AuditionForm = (props) => {
                 auditionDate: auditionDate.valueOf(), 
                 location: location,
                 paid: paid,
-                crewMembers: catState, 
+                crewMembers: crewMembers, 
                 ownerId: uid 
             })
             setTitle('')
@@ -125,16 +128,19 @@ const AuditionForm = (props) => {
                 />
                 <h3>Crew</h3>
                 {
-                    catState.map((val, idx) => (
-                        <CatInputs
-                            key={`cat-${idx}`}
-                            idx={idx}
-                            catState={catState}
-                            handleCatChange={handleCatChange}
-                        />
-                    ))
+                    crewMembers.map((crewMember, idx) => {
+                        crewMember.id = idx
+                        return (
+                            <CrewMembersInput
+                                key={crewMember.id}
+                                crewMember={crewMember}
+                                removeCrewMember={removeCrewMember}
+                                handleCrewMemberChange={handleCrewMemberChange}
+                            />
+                        )
+                    })
                 }
-                <button className="button" onClick={addCat}>Add member</button>
+                <button className="button" onClick={addCrewMember}>Add member</button>
                 <input className="button button--add" type="submit" value="Add Audition" />
             </form>
         </div>
