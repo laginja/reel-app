@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useReducer } from 'react';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
+import { addCrewMemberInput, removeCrewMemberInput, setCrewMemberInputs } from '../actions/crewMembersInput';
 import AuthContext from '../context/auth-context';
+import crewMembersInputReducer from '../reducers/crewMembersInput';
 import CrewMembersInput from './CrewMembersInput';
 import 'react-dates/lib/css/_datepicker.css'
 import 'react-dates/initialize' // imported to clear the error I was getting
@@ -26,9 +28,9 @@ const AuditionForm = (props) => {
     const [paid, setPaid] = useState(false) 
     const [error, setError] = useState('') 
 
-    /* create state for crew members array */
-    const blankCrewMember = { id: '', job: '', description: '' };
-    const [crewMembers, setCrewMembers] = useState([]);
+    /* create state for crew members input */
+    const crewMemberInput = { id: '', job: '', description: '' };
+    const [crewMembers, dispatchCrewMembers] = useReducer(crewMembersInputReducer, []);
 
     const onDateChange = (auditionDate) => {
         if (auditionDate) {
@@ -40,23 +42,27 @@ const AuditionForm = (props) => {
         setCalendarFocus(focused)
     };
 
-    /* Add Crew members */
+    /* Add Crew member field */
     const addCrewMember = (e) => {
         e.preventDefault()
-        setCrewMembers([ ...crewMembers, { ...blankCrewMember }]);
+        dispatchCrewMembers(addCrewMemberInput(crewMemberInput))
     };
 
-    const removeCrewMember = (crewMember) => {
-        setCrewMembers(crewMembers.filter((member) => member.id !== crewMember.id));
+    /* Remove Crew member field */
+    const removeCrewMember = (e, { id }) => {
+        e.preventDefault()
+        dispatchCrewMembers(removeCrewMemberInput(id))
     };
 
+    /* Update crewMembers state on input change */
     const handleCrewMemberChange = (e) => {
         e.preventDefault()
-        const updatedCrewMembers = [ ...crewMembers ];
-        updatedCrewMembers[e.target.dataset.idx][e.target.className] = e.target.value;
-        setCrewMembers(updatedCrewMembers);
+        const crewMemberInputs = [ ...crewMembers ];
+        crewMemberInputs[e.target.dataset.idx][e.target.className] = e.target.value;
+        dispatchCrewMembers(setCrewMemberInputs(crewMemberInputs))
     };
 
+    /* Submit new audition */
     const onSubmit = (e) => {
         e.preventDefault()
 

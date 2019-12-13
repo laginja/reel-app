@@ -10,8 +10,8 @@ const CrewMembersInput = ({ crewMember, removeCrewMember, handleCrewMemberChange
     const descriptionId = `descriptionId-${crewMember.id}`;
 
     /* Remove Crew members */
-    const handleRemoveCrewMember = () => {
-        removeCrewMember(crewMember);
+    const handleRemoveCrewMember = (e) => {
+        removeCrewMember(e, crewMember);
     };
 
     return (
