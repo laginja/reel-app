@@ -1,0 +1,13 @@
+.crew-member-input {
+    display: flex;
+    flex-direction: column;
+
+    > * {
+        margin-bottom: $s-size;
+    }
+}
+
+.crew-member-input__header {
+    display: flex;
+    align-items: center;
+}

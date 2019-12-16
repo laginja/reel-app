@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 /* TODO refactor this using a reducer and useReducer */
 
 
-const CrewMembersInput = ({ crewMember, removeCrewMember, handleCrewMemberChange }) => {
+const CrewMembersInput = ({ crewMember, removeCrewMember, handleCrewMemberInputChange }) => {
     const jobId = `job-${crewMember.id}`;
     const descriptionId = `descriptionId-${crewMember.id}`;
 
@@ -15,35 +15,39 @@ const CrewMembersInput = ({ crewMember, removeCrewMember, handleCrewMemberChange
     };
 
     return (
-        <div key={`member-${crewMember.id}`}>
-            <label htmlFor={jobId}>Job</label>
+        <div key={`member-${crewMember.id}`} className="crew-member-input">
+            <div className="crew-member-input__header">
+                <h3>Member #{crewMember.id + 1}</h3>
+                <button className="button button--remove" onClick={handleRemoveCrewMember}>X</button>
+            </div>
             <input
                 type="text"
-                name={jobId}
+                name="job"
+                placeholder="Job"
                 data-idx={crewMember.id}
                 id={jobId}
-                className="job"
+                className="text-input"
                 value={crewMember.job}
-                onChange={handleCrewMemberChange}
+                onChange={handleCrewMemberInputChange}
             />
-            <label htmlFor={descriptionId}>Description</label>
             <textarea
                 type="textarea"
-                name={descriptionId}
+                name="description"
+                placeholder="Description"
                 data-idx={crewMember.id}
                 id={descriptionId}
-                className="description"
+                className="text-input"
                 value={crewMember.description}
-                onChange={handleCrewMemberChange}
+                onChange={handleCrewMemberInputChange}
             />
-            <button onClick={handleRemoveCrewMember}>X</button>
+
         </div>
     );
 };
 
 CrewMembersInput.propTypes = {
     idx: PropTypes.number,
-    handleCrewMemberChange: PropTypes.func,
+    handleCrewMemberInputChange: PropTypes.func,
 };
 
 export default CrewMembersInput;

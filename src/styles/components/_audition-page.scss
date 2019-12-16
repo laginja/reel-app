@@ -1,0 +1,15 @@
+.audition-page__under-header {
+    display: flex;
+    margin-bottom: $m-size;
+    > * {
+        margin-right: $s-size;
+    }
+}
+
+.audition-page__under-header-item {
+    font-weight: bold;
+}
+
+.audition-page__description {
+    font-size: 2rem;
+}

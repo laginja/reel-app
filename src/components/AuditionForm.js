@@ -1,7 +1,7 @@
 import React, { useState, useContext, useReducer } from 'react';
-import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import { addCrewMemberInput, removeCrewMemberInput, setCrewMemberInputs } from '../actions/crewMembersInput';
+import moment from 'moment';
 import AuthContext from '../context/auth-context';
 import crewMembersInputReducer from '../reducers/crewMembersInput';
 import CrewMembersInput from './CrewMembersInput';
@@ -22,11 +22,11 @@ const AuditionForm = (props) => {
     const [description, setDescription] = useState('')
     const [createdAt, setCreatedAt] = useState(moment())
     const [category, setCategory] = useState('')
-    const [auditionDate, setAuditionDate] = useState() 
+    const [auditionDate, setAuditionDate] = useState()
     const [calendarFocused, setCalendarFocus] = useState(false)
-    const [location, setLocation] = useState('')  
-    const [paid, setPaid] = useState(false) 
-    const [error, setError] = useState('') 
+    const [location, setLocation] = useState('')
+    const [paid, setPaid] = useState(false)
+    const [error, setError] = useState('')
 
     /* create state for crew members input */
     const crewMemberInput = { id: '', job: '', description: '' };
@@ -35,10 +35,10 @@ const AuditionForm = (props) => {
     const onDateChange = (auditionDate) => {
         if (auditionDate) {
             setAuditionDate(auditionDate)
-        }       
+        }
     };
 
-    const onFocusChange = ({focused}) => {
+    const onFocusChange = ({ focused }) => {
         setCalendarFocus(focused)
     };
 
@@ -55,10 +55,10 @@ const AuditionForm = (props) => {
     };
 
     /* Update crewMembers state on input change */
-    const handleCrewMemberChange = (e) => {
+    const handleCrewMemberInputChange = (e) => {
         e.preventDefault()
-        const crewMemberInputs = [ ...crewMembers ];
-        crewMemberInputs[e.target.dataset.idx][e.target.className] = e.target.value;
+        const crewMemberInputs = [...crewMembers];
+        crewMemberInputs[e.target.dataset.idx][e.target.name] = e.target.value;
         dispatchCrewMembers(setCrewMemberInputs(crewMemberInputs))
     };
 
@@ -72,16 +72,16 @@ const AuditionForm = (props) => {
         if (!title || !description) {
             setError('Please fill the form')
         } else {
-            props.onSubmit({ 
-                title: title, 
-                description: description, 
+            props.onSubmit({
+                title: title,
+                description: description,
                 createdAt: createdAt.valueOf(),
                 category: category,
-                auditionDate: auditionDate.valueOf(), 
+                auditionDate: auditionDate.valueOf(),
                 location: location,
                 paid: paid,
-                crewMembers: crewMembers, 
-                ownerId: uid 
+                crewMembers: crewMembers,
+                ownerId: uid
             })
             setTitle('')
             setDescription('')
@@ -91,65 +91,67 @@ const AuditionForm = (props) => {
             setError('')
             setPaid(false)
             setAuditionDate('')
-        }   
+        }
     };
 
     return (
-        <div>
-            <form className="form" onSubmit={onSubmit}>
-                { error && <p className="form__error">{error}</p>}
-                <h3>General</h3>
-                <input 
-                    value={title} 
-                    className="text-input"
-                    placeholder="Title"
-                    onChange={(e) => setTitle(e.target.value)} 
-                />
-                <textarea 
-                    value={description} 
-                    className="textarea"
-                    placeholder="Audition Description"
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                <input 
-                    value={category} 
-                    className="text-input"
-                    placeholder="Category"
-                    onChange={(e) => setCategory(e.target.value)} 
-                />
-                <SingleDatePicker
-                    placeholder="Audition Date"
-                    date={auditionDate}
-                    onDateChange={onDateChange}
-                    focused={calendarFocused}
-                    onFocusChange={onFocusChange}
-                    numberOfMonths={1}
-                    block
-                />
-                <input 
-                    value={location} 
-                    className="text-input"
-                    placeholder="Location"
-                    onChange={(e) => setLocation(e.target.value)} 
-                />
-                <h3>Crew</h3>
-                {
-                    crewMembers.map((crewMember, idx) => {
-                        crewMember.id = idx
-                        return (
-                            <CrewMembersInput
-                                key={crewMember.id}
-                                crewMember={crewMember}
-                                removeCrewMember={removeCrewMember}
-                                handleCrewMemberChange={handleCrewMemberChange}
-                            />
-                        )
-                    })
-                }
+        <form className="form" onSubmit={onSubmit}>
+            {error && <p className="form__error">{error}</p>}
+            <h3>General</h3>
+            <input
+                value={title}
+                className="text-input"
+                placeholder="Title"
+                onChange={(e) => setTitle(e.target.value)}
+            />
+            <textarea
+                value={description}
+                className="textarea"
+                placeholder="Audition Description"
+                onChange={(e) => setDescription(e.target.value)}
+            />
+            <input
+                value={category}
+                className="text-input"
+                placeholder="Category"
+                onChange={(e) => setCategory(e.target.value)}
+            />
+            <SingleDatePicker
+                placeholder="Audition Date"
+                date={auditionDate}
+                onDateChange={onDateChange}
+                focused={calendarFocused}
+                onFocusChange={onFocusChange}
+                numberOfMonths={1}
+                block
+            />
+            <input
+                value={location}
+                className="text-input"
+                placeholder="Location"
+                onChange={(e) => setLocation(e.target.value)}
+            />
+            <h3>Crew</h3>
+            <div>
                 <button className="button" onClick={addCrewMember}>Add member</button>
+            </div>
+            {
+                crewMembers.map((crewMember, idx) => {
+                    crewMember.id = idx
+                    return (
+                        <CrewMembersInput
+                            key={crewMember.id}
+                            crewMember={crewMember}
+                            removeCrewMember={removeCrewMember}
+                            handleCrewMemberInputChange={handleCrewMemberInputChange}
+                        />
+                    )
+                })
+            }
+            <div>
                 <input className="button button--add" type="submit" value="Add Audition" />
-            </form>
-        </div>
+            </div>
+        </form>
     )
 }
 
