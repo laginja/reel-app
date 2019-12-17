@@ -14,14 +14,17 @@ const Header = () => {
                     <Link className="header__title" to="/">
                         <h1>Reels</h1>
                     </Link>
-                    <h3 className="header__title">
-                        Welcome, { currentUser.displayName }
-                    </h3>
+                    <Link to={`/user/${currentUser.uid}`}>
+                        <h3 className="header__title">
+                            Welcome, {currentUser.displayName}
+                        </h3>
+                    </Link>
+
                     <Link className="header__title" to="/createAudition">
                         <h3>Create Audition</h3>
                     </Link>
                     <button className="button button--link" onClick={startLogout}>Logout</button>
-                </div>   
+                </div>
             </div>
         </header>
     )
