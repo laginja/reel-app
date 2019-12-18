@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 //import AuthContext from '../context/auth-context';
-import AuditionsContext from '../context/audition-context';
-import { startRemoveAudition } from '../actions/auditions';
+import AuditionsContext from '../../context/audition-context';
+import { startRemoveAudition } from '../../actions/auditions';
 
 const AuditionListItem = ({ audition }) => {
     /* get dispatchAuditions function from the AuditionsContext */

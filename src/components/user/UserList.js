@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import UserListItem from './UserListItem';
-import UsersContext from '../context/users-context';
-import selectUsers from '../selectors/users';
+import UsersContext from '../../context/users-context';
+import selectUsers from '../../selectors/users';
 
 const UserList = () => {
     const { users, filters } = useContext(UsersContext)

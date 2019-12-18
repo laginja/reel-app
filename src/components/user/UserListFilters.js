@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { setTextFilter } from '../actions/filters';
-import UsersContext from '../context/users-context';
+import { setTextFilter } from '../../actions/filters';
+import UsersContext from '../../context/users-context';
 
 const UserListFilters = () => {
     const { dispatchFilters } = useContext(UsersContext)

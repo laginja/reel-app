@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useContext } from 'react';
-import { startFetchUser } from '../actions/users';
-import usersReducer from '../reducers/users';
-import AuthContext from '../context/auth-context';
+import { startFetchUser } from '../../actions/users';
+import usersReducer from '../../reducers/users';
+import AuthContext from '../../context/auth-context';
 
 const UserProfilePage = (props) => {
 

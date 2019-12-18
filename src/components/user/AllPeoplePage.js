@@ -1,11 +1,11 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { startSetUsers } from '../actions/users';
-import { filtersReducer, filtersReducerDefaultState } from '../reducers/filters';
-import usersReducer from '../reducers/users';
-import UsersContext from '../context/users-context';
-import Loading from '../components/Loading';
-import UserList from '../components/UserList';
-import UserListFilters from '../components/UserListFilters';
+import { startSetUsers } from '../../actions/users';
+import { filtersReducer, filtersReducerDefaultState } from '../../reducers/filters';
+import usersReducer from '../../reducers/users';
+import UsersContext from '../../context/users-context';
+import Loading from '../Loading';
+import UserList from './UserList';
+import UserListFilters from './UserListFilters';
 
 const AllPeoplePage = () => {
 

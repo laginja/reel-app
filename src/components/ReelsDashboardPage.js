@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import AllAuditionsPage from './AllAuditionsPage';
-import AllPeoplePage from './AllPeoplePage';
+import AllAuditionsPage from './audition/AllAuditionsPage';
+import AllPeoplePage from './user/AllPeoplePage';
 
 const ReelsDashboardPage = () => {
     const [selection, setSelection] = useState('auditions');

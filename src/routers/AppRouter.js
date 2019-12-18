@@ -2,14 +2,14 @@ import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 // we use this function to create our own history
 import createHistory from 'history/createBrowserHistory';
-import AddAuditionPage from '../components/AddAuditionPage';
-import AuditionPage from '../components/AuditionPage';
+import AddAuditionPage from '../components/audition/AddAuditionPage';
+import AuditionPage from '../components/audition/AuditionPage';
 import LoginPage from '../components/LoginPage';
 import ReelsDashboardPage from '../components/ReelsDashboardPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
-import UserProfilePage from '../components/UserProfilePage';
+import UserProfilePage from '../components/user/UserProfilePage';
 
 export const history = createHistory()
 

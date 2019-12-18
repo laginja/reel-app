@@ -1,9 +1,9 @@
 import React, { useState, useContext, useReducer } from 'react';
 import { SingleDatePicker } from 'react-dates';
-import { addCrewMemberInput, removeCrewMemberInput, setCrewMemberInputs } from '../actions/crewMembersInput';
+import { addCrewMemberInput, removeCrewMemberInput, setCrewMemberInputs } from '../../actions/crewMembersInput';
 import moment from 'moment';
-import AuthContext from '../context/auth-context';
-import crewMembersInputReducer from '../reducers/crewMembersInput';
+import AuthContext from '../../context/auth-context';
+import crewMembersInputReducer from '../../reducers/crewMembersInput';
 import CrewMembersInput from './CrewMembersInput';
 import 'react-dates/lib/css/_datepicker.css'
 import 'react-dates/initialize' // imported to clear the error I was getting

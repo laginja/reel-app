@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { filtersReducer, filtersReducerDefaultState } from '../reducers/filters';
-import auditionsReducer from '../reducers/auditions';
+import { filtersReducer, filtersReducerDefaultState } from '../../reducers/filters';
+import auditionsReducer from '../../reducers/auditions';
 //import AuthContext from '../context/auth-context';
-import Loading from './Loading';
+import Loading from '../Loading';
 import AuditionList from './AuditionList';
 import AuditionListFilters from './AuditionListFilters';
-import AuditionsContext from '../context/audition-context';
-import { startSetAuditions } from '../actions/auditions';
+import AuditionsContext from '../../context/audition-context';
+import { startSetAuditions } from '../../actions/auditions';
 
 const AllAuditionsPage = () => {
     //const { currentUser } = useContext(AuthContext)

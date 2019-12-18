@@ -1,6 +1,6 @@
 import React from 'react';
 import AuditionForm from './AuditionForm';
-import { startAddAudition } from '../actions/auditions';
+import { startAddAudition } from '../../actions/auditions';
 
 const AddAuditionPage = (props) => {
     return (

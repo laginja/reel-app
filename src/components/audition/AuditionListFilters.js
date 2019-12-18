@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { setTextFilter } from '../actions/filters';
-import AuditionsContext from '../context/audition-context';
+import { setTextFilter } from '../../actions/filters';
+import AuditionsContext from '../../context/audition-context';
 
 const AuditionListFilters = () => {
     const { dispatchFilters } = useContext(AuditionsContext)

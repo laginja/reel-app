@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useReducer } from 'react';
-import { startFetchAudition } from '../actions/auditions';
+import { startFetchAudition } from '../../actions/auditions';
 import moment from 'moment';
-import auditionsReducer from '../reducers/auditions';
-import Loading from '../components/Loading';
+import auditionsReducer from '../../reducers/auditions';
+import Loading from '../Loading';
 
 const AuditionPage = (props) => {
 

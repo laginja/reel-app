@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import AuditionListItem from './AuditionListItem';
-import AuditionsContext from '../context/audition-context';
-import selectAuditions from '../selectors/auditions';
+import AuditionsContext from '../../context/audition-context';
+import selectAuditions from '../../selectors/auditions';
 
 const AuditionList = () => {
     const { auditions, filters } = useContext(AuditionsContext)
