@@ -1,8 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
+import { startRemoveAudition } from '../../actions/auditions';
+import { startFetchUser } from '../../actions/users';
+import usersReducer from '../../reducers/users';
 //import AuthContext from '../context/auth-context';
 import AuditionsContext from '../../context/audition-context';
-import { startRemoveAudition } from '../../actions/auditions';
 
 const AuditionListItem = ({ audition }) => {
     /* get dispatchAuditions function from the AuditionsContext */
@@ -14,13 +16,24 @@ const AuditionListItem = ({ audition }) => {
         startRemoveAudition(dispatchAuditions, audition)
     }
 
+    const [owner, dispatchOwner] = useReducer(usersReducer, [])
+
+    useEffect(() => {
+        startFetchUser(audition.ownerId, dispatchOwner)
+    }, [audition.ownerId])
+
     return (
         <div className="list-item">
             <Link to={`/audition/${audition.id}`}>
                 <h3>{audition.title}</h3>
             </Link>
+            <h5>Created by
+                <Link to={`user/${owner.uid}`}>
+                    {owner.displayName}
+                </Link>
+            </h5>
             <button onClick={removeAudition}>X</button>
-        </div>    
+        </div>
     )
 }
 

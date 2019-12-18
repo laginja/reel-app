@@ -17,7 +17,7 @@ const AllPeoplePage = () => {
         startSetUsers(dispatchUsers).then(() => {
             setUsersLoaded(true)
         })
-    })
+    }, [])
 
     return (
         <UsersContext.Provider value={{users, filters, dispatchFilters}}>
