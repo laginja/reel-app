@@ -11,10 +11,10 @@ export const createUser = (auth) => {
         displayName = 'Random User', 
         photoURL = '', 
         email = '',
-        profession = 'Editor'
+        profession = 'Actor'
     } = auth.user
 
-    const user = { displayName, photoURL, email, profession }
+    const user = { uid, displayName, photoURL, email, profession }
 
     return database.ref(`users/${uid}`).set(user).then(() => {
         console.log('User created')
