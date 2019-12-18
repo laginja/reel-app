@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AllAuditionsPage from './AllAuditionsPage';
+import AllPeoplePage from './AllPeoplePage';
 
 const ReelsDashboardPage = () => {
     const [selection, setSelection] = useState('auditions');
@@ -12,7 +13,7 @@ const ReelsDashboardPage = () => {
                 <button className="button" onClick={() => setSelection('people')}>People</button>
             </div>
             <div>
-                { selection === 'auditions' ? <AllAuditionsPage /> : <div><h1>People component</h1></div>}    
+                { selection === 'auditions' ? <AllAuditionsPage /> : <AllPeoplePage />}    
             </div>
         </div>
         

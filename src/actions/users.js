@@ -36,3 +36,28 @@ export const startFetchUser = (id = null, dispatchUser) => {
         dispatchUser(fetchUser(snapshot.val()))
     });
 };
+
+
+/* SetUsers - return an object that gets dispatched to change the state */
+export const setUsers = (users) => {
+    return {
+        type: 'POPULATE_USERS',
+        users: users
+    };
+};
+
+/* ASYNC action that is responsible for fetching data from firebase */
+export const startSetUsers = (dispatchUsers) => {
+
+    return database.ref(`users/`).once('value').then((snapshot) => {
+        const users = [];
+
+        snapshot.forEach((childSnapshot) => {
+            users.push({
+                id: childSnapshot.key,
+                ...childSnapshot.val()
+            });
+        });
+        dispatchUsers(setUsers(users))
+    });
+};
