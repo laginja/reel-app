@@ -24,7 +24,7 @@ const AuditionListItem = ({ audition }) => {
 
     return (
         <div className="list-item">
-            <Link to={`/audition/${audition.id}`}>
+            <Link to={`audition/${audition.id}`}>
                 <h3>{audition.title}</h3>
             </Link>
             <h5>Created by

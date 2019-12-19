@@ -2,21 +2,23 @@ import React, { useEffect, useState, useReducer } from 'react';
 import { startFetchAudition } from '../../actions/auditions';
 import moment from 'moment';
 import auditionsReducer from '../../reducers/auditions';
+import JobsContext from '../../context/jobs-context';
+import JobList from './JobList';
 import Loading from '../Loading';
 
 const AuditionPage = (props) => {
 
-    const { id } = props.match.params
-
+    const { id: auditionId } = props.match.params
+    
     // create states and provide dispatch function for the reducer to update that state
     const [audition, dispatchAudition] = useReducer(auditionsReducer, [])
     const [auditionLoaded, setAuditionLoaded] = useState(false)
 
     useEffect(() => {
-        startFetchAudition(id, dispatchAudition).then(() => {
+        startFetchAudition(auditionId, dispatchAudition).then(() => {
             setAuditionLoaded(true)
         })
-    }, [id])
+    }, [auditionId])
 
     return (
         <div className="content-main__item-wide">
@@ -55,21 +57,18 @@ const AuditionPage = (props) => {
                         {audition.description ? audition.description : ""}
                     </div>
                     <h3>Audition date {moment(audition.auditionDate).format('DD MMMM, YYYY')}</h3>
-                    <h3>Crew Members</h3>
+                    <h3>Job positions</h3>
                     {
                         !audition.crewMembers ? (
                             <div>
-                                <span>No crew members</span>
+                                <span>No jobs specified</span>
                             </div>
-                        ) : (
-                                audition.crewMembers.map((role) => {
-                                    return (
-                                        <div key={role.id}>
-                                            <h3>{role.job}</h3>
-                                            <p>{role.description}</p>
-                                        </div>
-                                    )
-                                })
+                        ) : (   
+                                /* TODO refactor audition to store it's ID */
+                                /* TODO pass dispatchAudition to change audition state when user applies to audition */
+                                <JobsContext.Provider value={{audition, auditionId}}>
+                                    <JobList />
+                                </JobsContext.Provider>
                             )
 
                     }

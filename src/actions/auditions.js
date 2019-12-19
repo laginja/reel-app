@@ -94,10 +94,17 @@ export const fetchAudition = (audition) => {
 
 /* DOES THIS NEED A STATE ??? */
 
-/* ASYNC action that is responsible for fetching data from firebase */
-export const startFetchAudition = (id = null, dispatchAudition) => {
+export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     
-    return database.ref(`auditions/${id}`).once('value').then((snapshot) => {
+    return database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
         dispatchAudition(fetchAudition(snapshot.val()))
+    });
+};
+
+
+export const startApplyToJob = (auditionId, jobId, userId) => {
+    
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(userId).then((ref) => {
+        
     });
 };
