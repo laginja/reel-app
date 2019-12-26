@@ -12,6 +12,8 @@ const auditionsReducer = (state, action) => {
             return state.filter((audition) => audition.id !== action.id);
         case 'FIND_AUDITION':
             return action.audition;
+        case 'UPDATE_AUDITION_APPLICANTS':
+            return action.audition;            
         default:
             return state;
     }

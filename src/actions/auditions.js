@@ -92,8 +92,6 @@ export const fetchAudition = (audition) => {
     };
 };
 
-/* DOES THIS NEED A STATE ??? */
-
 export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     
     return database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
@@ -101,10 +99,12 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     });
 };
 
+/* Triggers when a user applies for a job in an audition  */
+export const startApplyToJob = (auditionId, jobId, userId, dispatchAudition) => {
 
-export const startApplyToJob = (auditionId, jobId, userId) => {
-    
     return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(userId).then((ref) => {
-        
+        // TODO try to mitigate call to database  
+        dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
+
     });
 };

@@ -7,6 +7,7 @@ const JobListItem = ({ job }) => {
 
     const { currentUser } = useContext(AuthContext)
     const { auditionId } = useContext(JobsContext)
+    const { dispatchAudition } = useContext(JobsContext)
     
     const userId = currentUser.uid
 
@@ -19,8 +20,7 @@ const JobListItem = ({ job }) => {
     }
 
     const applyToJob = () => {
-        startApplyToJob(auditionId, job.id, userId)
-        console.log(auditionId)
+        startApplyToJob(auditionId, job.id, userId, dispatchAudition)
     }
 
     return (
