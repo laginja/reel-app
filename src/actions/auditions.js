@@ -74,7 +74,6 @@ export const startSetAuditions = (dispatchAuditions) => {
     return database.ref(`auditions/`).once('value').then((snapshot) => {
         const auditions = [];
 
-        console.log(typeof snapshot)
         snapshot.forEach((childSnapshot) => {
             auditions.push({
                 id: childSnapshot.key,
@@ -103,7 +102,9 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
 /* Triggers when a user applies for a job in an audition  */
 export const startApplyToJob = (auditionId, jobId, userId, dispatchAudition) => {
 
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(userId).then((ref) => {
+    const applicantInformation = { userId }
+    
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(applicantInformation).then((ref) => {
         // TODO try to mitigate call to database  
         dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
 
