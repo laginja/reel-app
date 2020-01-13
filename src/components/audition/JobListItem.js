@@ -12,10 +12,11 @@ const JobListItem = ({ job }) => {
     const userId = currentUser.uid
 
     let hasApplied = false
-    const applicants = job.applicants
+    const applicants = []
 
-    for (var i in applicants) {
-        if (applicants[i] === currentUser.uid)
+    for (var i in job.applicants) {
+        applicants.push(job.applicants[i])
+        if (job.applicants[i] === currentUser.uid)
             hasApplied = true
     }
 
@@ -28,6 +29,8 @@ const JobListItem = ({ job }) => {
             <h3>{job.job}</h3>
             <p>{job.description}</p>
             {hasApplied ? <h3>Applied</h3> : <button onClick={applyToJob}>Apply</button>}
+            <h3>Applicants:</h3>
+            {applicants}
         </div>
     )
 }

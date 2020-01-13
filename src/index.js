@@ -12,7 +12,7 @@ import * as serviceWorker from './serviceWorker';
 /* Firebase */
 import { firebase } from './firebase/firebase';
 
-/* Consider REFACTORING code bellow */
+/* TODO Consider REFACTORING code bellow */
 /* ensures that the app renders only once */
 let hasRendered = false;
 const renderApp = () => {

@@ -74,6 +74,7 @@ export const startSetAuditions = (dispatchAuditions) => {
     return database.ref(`auditions/`).once('value').then((snapshot) => {
         const auditions = [];
 
+        console.log(typeof snapshot)
         snapshot.forEach((childSnapshot) => {
             auditions.push({
                 id: childSnapshot.key,

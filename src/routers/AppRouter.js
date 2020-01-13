@@ -19,7 +19,7 @@ const AppRouter = () => {
             <div>
                 <Switch>
                     <PublicRoute path="/" component={LoginPage} exact={true} />
-                    <PrivateRoute path="/index" component={ReelsDashboardPage} exact={true}/>
+                    <PrivateRoute path="/index" component={ReelsDashboardPage}/>
                     <PrivateRoute path="/createAudition" component={AddAuditionPage} />
                     <PrivateRoute path="/user/:id" component={UserProfilePage} />
                     <PrivateRoute path="/audition/:id" component={AuditionPage} />
