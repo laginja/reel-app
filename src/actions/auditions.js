@@ -103,10 +103,44 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
 export const startApplyToJob = (auditionId, jobId, userId, dispatchAudition) => {
 
     const applicantInformation = { userId }
-    
+
     return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(applicantInformation).then((ref) => {
         // TODO try to mitigate call to database  
         dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
 
+    });
+};
+
+/* Triggers when a user un-applies from a job */
+export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchAudition) => {
+
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants/`).remove().then((ref) => {
+        // TODO try to mitigate call to database  
+        dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
+
+    });
+};
+
+/* SetAuditions - return an object that gets dispatched to change the state */
+export const setApplicants = (applicants) => {
+    return {
+        type: 'POPULATE_APPLICANTS',
+        applicants: applicants
+    };
+};
+
+/* ASYNC action that is responsible for fetching data from firebase */
+export const startSetApplicants = (auditionId, jobId, dispatchApplicants) => {
+
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).once('value').then((snapshot) => {
+        const applicants = [];
+
+        snapshot.forEach((childSnapshot) => {
+            applicants.push({
+                id: childSnapshot.key,
+                ...childSnapshot.val()
+            });
+        });
+        dispatchApplicants(setApplicants(applicants))
     });
 };

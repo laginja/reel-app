@@ -22,6 +22,7 @@ const AuditionListItem = ({ audition }) => {
         startFetchUser(audition.ownerId, dispatchOwner)
     }, [audition.ownerId])
 
+    console.log(audition)
     return (
         <div className="list-item">
             <Link to={`audition/${audition.id}`}>
