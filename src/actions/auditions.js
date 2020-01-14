@@ -84,7 +84,7 @@ export const startSetAuditions = (dispatchAuditions) => {
     });
 };
 
-/* SetAuditions - return an object that gets dispatched to change the state */
+/* Set audition to the component state */
 export const fetchAudition = (audition) => {
     return {
         type: 'FIND_AUDITION',
@@ -92,36 +92,61 @@ export const fetchAudition = (audition) => {
     };
 };
 
+/* Fetch audition from the DB and store it into component state */
 export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     
+    // fetch audition from the DB
     return database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
+        // add audition to the component state
         dispatchAudition(fetchAudition(snapshot.val()))
     });
 };
 
+/* Add applicant to the component state */
+export const addApplicant =  (applicant) => {
+    return {
+        type: 'ADD_APPLICANT',
+        applicant: applicant
+    }
+};
+
 /* Triggers when a user applies for a job in an audition  */
-export const startApplyToJob = (auditionId, jobId, userId, dispatchAudition) => {
+export const startApplyToJob = (auditionId, jobId, userId, dispatchApplicants) => {
 
-    const applicantInformation = { userId }
+    // create applicant object
+    let applicant = { userId }
 
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(applicantInformation).then((ref) => {
-        // TODO try to mitigate call to database  
-        dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
+    // add applicant to the DB
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(applicant).then((ref) => {
+
+        // get reference key under which the applicant is stored and add it to the 'applicant' object 
+        applicant = {id: ref.key, ...applicant}
+
+        // dispatch that applicant to update the component state 
+        dispatchApplicants(addApplicant(applicant))
 
     });
+};
+
+/* Remove applicant from the component state */
+export const removeApplicant = (id) => {
+    return {
+        type: 'REMOVE_APPLICANT',
+        id: id
+    }
 };
 
 /* Triggers when a user un-applies from a job */
-export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchAudition) => {
+export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchApplicants) => {
 
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants/`).remove().then((ref) => {
-        // TODO try to mitigate call to database  
-        dispatchAudition(startFetchAudition(auditionId, dispatchAudition))
-
+    // remove applicant from DB
+    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants/${userId}`).remove().then((ref) => {
+        // remove applicant from component state
+        dispatchApplicants(removeApplicant(userId))
     });
 };
 
-/* SetAuditions - return an object that gets dispatched to change the state */
+/* Set applicants' state */
 export const setApplicants = (applicants) => {
     return {
         type: 'POPULATE_APPLICANTS',
@@ -129,18 +154,22 @@ export const setApplicants = (applicants) => {
     };
 };
 
-/* ASYNC action that is responsible for fetching data from firebase */
+/* Set applicants for a job */
 export const startSetApplicants = (auditionId, jobId, dispatchApplicants) => {
 
+    // fetch applicants of a job
     return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).once('value').then((snapshot) => {
         const applicants = [];
 
+        // add 'ref.key' as applicant id
         snapshot.forEach((childSnapshot) => {
             applicants.push({
                 id: childSnapshot.key,
                 ...childSnapshot.val()
             });
         });
+
+        // set applicants to the component state
         dispatchApplicants(setApplicants(applicants))
     });
 };

@@ -1,6 +1,6 @@
 // Same syntax as a Redux reducer
 const auditionsReducer = (state, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case 'POPULATE_AUDITIONS':
             return action.auditions;
         case 'ADD_AUDITION':
@@ -14,8 +14,13 @@ const auditionsReducer = (state, action) => {
             return action.audition;
         case 'POPULATE_APPLICANTS':
             return action.applicants;
-        case 'UPDATE_AUDITION_APPLICANTS':
-            return action.audition;            
+        case 'ADD_APPLICANT':
+            return [
+                ...state,
+                action.applicant
+            ];
+        case 'REMOVE_APPLICANT':
+            return state.filter((applicant) => applicant.id !== action.id);
         default:
             return state;
     }

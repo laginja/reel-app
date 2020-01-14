@@ -9,34 +9,39 @@ const JobListItem = ({ job }) => {
 
     const { currentUser } = useContext(AuthContext)
     const { auditionId } = useContext(JobsContext)
-    const { dispatchAudition } = useContext(JobsContext)
+    const [applicants, dispatchApplicants] = useReducer(auditionsReducer, [])
 
-    const userId = currentUser.uid
+    const userUid = currentUser.uid
     const jobId = job.id
-
+    let userId = null
     let hasApplied = false
 
-    const [applicants, dispatchApplicants] = useReducer(auditionsReducer, [])
-    // const applicants = []
-
-    /* Job Applicants is an object so we need to iterate over it like a collection */
+    // 'applicants' is an object so we need to iterate over it like a collection 
     for (var i in applicants) {
-        if (applicants[i].userId === currentUser.uid)
+        // check if user is one of the applicants
+        if (applicants[i].userId === userUid) {
+            // set user's ID (ref.key) so the user can be deleted from the DB by the 'ref.key'
+            userId = applicants[i].id
+            // change the 'Apply' button to 'Applied'
             hasApplied = true
+        }      
     }
-
+    
+    // apply to a job
     const applyToJob = () => {
-        startApplyToJob(auditionId, jobId, userId, dispatchAudition)
+        startApplyToJob(auditionId, jobId, userUid, dispatchApplicants)
     }
 
+    // unapply from a job
     const unapplyFromJob = () => {
-        // TODO
-        //startUnapplyFromJob()
+        startUnapplyFromJob(auditionId, jobId, userId, dispatchApplicants)
+        hasApplied = false
     }
 
     useEffect(() => {
+        // fetch all applicant for this job when the component mounts
         startSetApplicants(auditionId, jobId, dispatchApplicants)
-    }, [])
+    }, [auditionId, jobId])
 
     return (
         <div >

@@ -65,7 +65,6 @@ const AuditionPage = (props) => {
                             </div>
                         ) : (   
                                 /* TODO refactor audition to store it's ID */
-                                /* TODO pass dispatchAudition to change audition state when user applies to audition */
                                 <JobsContext.Provider value={{audition, auditionId, dispatchAudition}}>
                                     <JobList />
                                 </JobsContext.Provider>
