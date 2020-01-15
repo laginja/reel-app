@@ -10,7 +10,7 @@ import database from '../firebase/firebase';
 */
 
 /* AddAudition - return an object that gets dispatched to change the state */
-export const addAudition =  (audition) => {
+export const addAudition = (audition) => {
     return {
         type: 'ADD_AUDITION',
         audition: audition
@@ -19,18 +19,18 @@ export const addAudition =  (audition) => {
 
 /* ASYNC action that is responsible for adding data to firebase */
 export const startAddAudition = (auditionData = {}) => {
-    const { 
-        title = '', 
-        description = '', 
+    const {
+        title = '',
+        description = '',
         createdAt = 0,
         category = '',
         auditionDate = 0,
         location = '',
         paid = 'false',
         crewMembers = [],
-        ownerId = null 
+        ownerId = null
     } = auditionData;
-    
+
     const audition = { title, description, createdAt, category, auditionDate, location, paid, crewMembers, ownerId }
 
     /* consider returning this promise for later usage */
@@ -55,10 +55,10 @@ export const removeAudition = ({ id }) => {
 export const startRemoveAudition = (dispatchAuditions, audition = {}) => {
     const { id } = audition
     /* consider returning this promise for later usage */
-    database.ref(`auditions/${id}`).remove().then(() =>{
+    database.ref(`auditions/${id}`).remove().then(() => {
         dispatchAuditions(removeAudition({ id }));
     });
-}; 
+};
 
 /* SetAuditions - return an object that gets dispatched to change the state */
 export const setAuditions = (auditions) => {
@@ -94,10 +94,32 @@ export const fetchAudition = (audition) => {
 
 /* Fetch audition from the DB and store it into component state */
 export const startFetchAudition = (auditionId = null, dispatchAudition) => {
-    
+
     // fetch audition from the DB
     return database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
         // add audition to the component state
         dispatchAudition(fetchAudition(snapshot.val()))
+    });
+};
+
+/* Fetch auditions from the DB for the given user */
+export const startFetchUserAuditions = (userId, setUserAuditions) => {
+
+    // fetch auditions from the DB
+    return database.ref(`auditions/`).once('value').then((snapshot) => {
+        const userAuditions = [];
+
+        // TODO: check if this is optimal
+        // iterate over each and see if it belongs to the user
+        snapshot.forEach((childSnapshot) => {
+            if (childSnapshot.val().ownerId === userId) {
+                userAuditions.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+            }
+        });
+
+        setUserAuditions(userAuditions)
     });
 };

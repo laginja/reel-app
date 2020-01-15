@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { startRemoveAudition } from '../../actions/auditions';
 import { startFetchUser } from '../../actions/users';
 import usersReducer from '../../reducers/users';
-//import AuthContext from '../context/auth-context';
 import AuditionsContext from '../../context/audition-context';
 
 const AuditionListItem = ({ audition }) => {
