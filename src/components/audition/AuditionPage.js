@@ -65,7 +65,7 @@ const AuditionPage = (props) => {
                             </div>
                         ) : (   
                                 /* TODO refactor audition to store it's ID */
-                                <JobsContext.Provider value={{audition, auditionId, dispatchAudition}}>
+                                <JobsContext.Provider value={{ audition, auditionId }}>
                                     <JobList />
                                 </JobsContext.Provider>
                             )

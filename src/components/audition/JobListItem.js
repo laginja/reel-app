@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
-import { startApplyToJob, startUnapplyFromJob, startSetApplicants } from '../../actions/auditions';
-import auditionsReducer from '../../reducers/auditions';
+import { startApplyToJob, startUnapplyFromJob, startSetApplicants } from '../../actions/applicants';
+import applicantsReducer from '../../reducers/applicants';
 import AuthContext from '../../context/auth-context';
 import JobApplicant from './JobApplicant';
 import JobsContext from '../../context/jobs-context';
@@ -9,7 +9,7 @@ const JobListItem = ({ job }) => {
 
     const { currentUser } = useContext(AuthContext)
     const { auditionId } = useContext(JobsContext)
-    const [applicants, dispatchApplicants] = useReducer(auditionsReducer, [])
+    const [applicants, dispatchApplicants] = useReducer(applicantsReducer, [])
 
     const userUid = currentUser.uid
     const jobId = job.id

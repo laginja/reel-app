@@ -12,15 +12,6 @@ const auditionsReducer = (state, action) => {
             return state.filter((audition) => audition.id !== action.id);
         case 'FIND_AUDITION':
             return action.audition;
-        case 'POPULATE_APPLICANTS':
-            return action.applicants;
-        case 'ADD_APPLICANT':
-            return [
-                ...state,
-                action.applicant
-            ];
-        case 'REMOVE_APPLICANT':
-            return state.filter((applicant) => applicant.id !== action.id);
         default:
             return state;
     }
