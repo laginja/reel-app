@@ -59,7 +59,7 @@ const AuditionPage = (props) => {
                     <h3>Audition date {moment(audition.auditionDate).format('DD MMMM, YYYY')}</h3>
                     <h3>Job positions</h3>
                     {
-                        !audition.crewMembers ? (
+                        !audition.jobs ? (
                             <div>
                                 <span>No jobs specified</span>
                             </div>

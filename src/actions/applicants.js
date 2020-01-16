@@ -15,7 +15,7 @@ export const startApplyToJob = (auditionId, jobId, userId, dispatchApplicants) =
     let applicant = { userId }
 
     // add applicant to the DB
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).push(applicant).then((ref) => {
+    return database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants`).push(applicant).then((ref) => {
 
         // get reference key under which the applicant is stored and add it to the 'applicant' object 
         applicant = {id: ref.key, ...applicant}
@@ -38,7 +38,7 @@ export const unapplyFromJob = (id) => {
 export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchApplicants) => {
 
     // remove applicant from DB
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants/${userId}`).remove().then((ref) => {
+    return database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants/${userId}`).remove().then((ref) => {
         // remove applicant from component state
         dispatchApplicants(unapplyFromJob(userId))
     });
@@ -56,7 +56,7 @@ export const setApplicants = (applicants) => {
 export const startSetApplicants = (auditionId, jobId, dispatchApplicants) => {
 
     // fetch applicants of a job
-    return database.ref(`auditions/${auditionId}/crewMembers/${jobId}/applicants`).once('value').then((snapshot) => {
+    return database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants`).once('value').then((snapshot) => {
         const applicants = [];
 
         // add 'ref.key' as applicant id

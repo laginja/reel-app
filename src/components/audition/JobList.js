@@ -6,12 +6,18 @@ const JobList = () => {
 
     const { audition } = useContext(JobsContext)
 
+    let jobListItems = []
+    
+    /* for (var i in audition.jobs) {
+        jobListItems.push(audition.jobs[i])
+    }  */
+
     return (
         <div className="list-body">
-            {audition.crewMembers.length === 0 ? (
+            {audition.jobs.length === 0 ? (
                 <p>No jobs specified for this project</p>
             ) : (
-                audition.crewMembers.map((job) => (
+                audition.jobs.map((job) => (
                         <JobListItem key={job.id} job={job} />
                     ))
                 )

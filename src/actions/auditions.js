@@ -31,10 +31,14 @@ export const startAddAudition = (auditionData = {}) => {
         ownerId = null
     } = auditionData;
 
-    const audition = { title, description, createdAt, category, auditionDate, location, paid, crewMembers, ownerId }
+    const audition = { title, description, createdAt, category, auditionDate, location, paid, ownerId }
 
     /* consider returning this promise for later usage */
     database.ref(`auditions/`).push(audition).then((ref) => {
+
+        crewMembers.forEach((job) => {
+            database.ref(`auditions/${ref.key}/jobs`).push(job)
+        })
         //  after the data if pushed, call dispatch to add data to redux store
         /* dispatchAuditions(addAudition({
             id: ref.key,
@@ -97,8 +101,23 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
 
     // fetch audition from the DB
     return database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
+        const jobs = []
+
+        // iterate over jobs collection
+        for (var jobItem in snapshot.val().jobs) {
+            // get a job lol
+            let job = snapshot.val().jobs[jobItem]
+            // set it's id as the FB entry
+            job.id = jobItem
+            // append it to the jobs array
+            jobs.push(job)
+        }      
+
+        let audition = snapshot.val()
+        // replace jobs collection with jobs array because it's easier to manipulate later
+        audition = {...audition, jobs }
         // add audition to the component state
-        dispatchAudition(fetchAudition(snapshot.val()))
+        dispatchAudition(fetchAudition(audition))
     });
 };
 
