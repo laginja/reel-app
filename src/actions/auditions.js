@@ -27,7 +27,7 @@ export const startAddAudition = (auditionData = {}) => {
         auditionDate = 0,
         location = '',
         paid = 'false',
-        crewMembers = [],
+        jobs = [],
         ownerId = null
     } = auditionData;
 
@@ -35,10 +35,13 @@ export const startAddAudition = (auditionData = {}) => {
 
     /* consider returning this promise for later usage */
     database.ref(`auditions/`).push(audition).then((ref) => {
+        const auditionId = ref.key
 
-        crewMembers.forEach((job) => {
-            database.ref(`auditions/${ref.key}/jobs`).push(job)
+        jobs.forEach((job) => {
+            database.ref(`auditions/${auditionId}/jobs`).push(job)
         })
+
+        database.ref(`users/${ownerId}/auditions`).push(auditionId)
         //  after the data if pushed, call dispatch to add data to redux store
         /* dispatchAuditions(addAudition({
             id: ref.key,
@@ -122,23 +125,38 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
 };
 
 /* Fetch auditions from the DB for the given user */
-export const startFetchUserAuditions = (userId, setUserAuditions) => {
+export const startFetchUserAuditions = (userId, dispatchAuditions) => {
 
-    // fetch auditions from the DB
-    return database.ref(`auditions/`).once('value').then((snapshot) => {
-        const userAuditions = [];
+    // // fetch auditions from the DB
+    // return database.ref(`auditions/`).once('value').then((snapshot) => {
+    //     const userAuditions = [];
 
-        // TODO: check if this is optimal
-        // iterate over each and see if it belongs to the user
+    //     // TODO: check if this is optimal
+    //     // iterate over each and see if it belongs to the user
+    //     snapshot.forEach((childSnapshot) => {
+    //         if (childSnapshot.val().ownerId === userId) {
+    //             userAuditions.push({
+    //                 id: childSnapshot.key,
+    //                 ...childSnapshot.val()
+    //             });
+    //         }
+    //     });
+
+    //     setUserAuditions(userAuditions)
+    // });
+
+    return database.ref(`users/${userId}/auditions`).once('value').then((snapshot) => {
+        const userAuditions = []
+
+        console.log(snapshot.val())
         snapshot.forEach((childSnapshot) => {
-            if (childSnapshot.val().ownerId === userId) {
-                userAuditions.push({
-                    id: childSnapshot.key,
-                    ...childSnapshot.val()
-                });
-            }
-        });
-
-        setUserAuditions(userAuditions)
-    });
+            console.log(childSnapshot.val())
+            database.ref(`auditions/${childSnapshot.val()}`).once('value').then((snapshot) => {
+                console.log("auditions-snapshot", snapshot.val())
+                userAuditions.push(snapshot.val())
+                dispatchAuditions(addAudition(userAuditions))
+            })
+        })
+        
+    })
 };

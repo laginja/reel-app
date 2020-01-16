@@ -80,7 +80,7 @@ const AuditionForm = (props) => {
                 auditionDate: auditionDate.valueOf(),
                 location: location,
                 paid: paid,
-                crewMembers: crewMembers,
+                jobs: crewMembers,
                 ownerId: uid
             })
             setTitle('')
