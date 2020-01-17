@@ -127,36 +127,33 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
 /* Fetch auditions from the DB for the given user */
 export const startFetchUserAuditions = (userId, dispatchAuditions) => {
 
-    // // fetch auditions from the DB
-    // return database.ref(`auditions/`).once('value').then((snapshot) => {
-    //     const userAuditions = [];
-
-    //     // TODO: check if this is optimal
-    //     // iterate over each and see if it belongs to the user
-    //     snapshot.forEach((childSnapshot) => {
-    //         if (childSnapshot.val().ownerId === userId) {
-    //             userAuditions.push({
-    //                 id: childSnapshot.key,
-    //                 ...childSnapshot.val()
-    //             });
-    //         }
-    //     });
-
-    //     setUserAuditions(userAuditions)
-    // });
-
+    // get all auditions created by the user
     return database.ref(`users/${userId}/auditions`).once('value').then((snapshot) => {
+        // array to store auditions state
         const userAuditions = []
 
-        console.log(snapshot.val())
+        // array to store promises
+        const promises = []
+
+        // iterate over each audition to get it's ID
         snapshot.forEach((childSnapshot) => {
-            console.log(childSnapshot.val())
-            database.ref(`auditions/${childSnapshot.val()}`).once('value').then((snapshot) => {
-                console.log("auditions-snapshot", snapshot.val())
-                userAuditions.push(snapshot.val())
-                dispatchAuditions(addAudition(userAuditions))
-            })
+            // query for that audition in the 'auditions' object and push the returned promise to the array
+            promises.push(database.ref(`auditions/${childSnapshot.val()}`).once('value'))
         })
-        
-    })
+
+        // make sure to execute this only after all auditions have been queried
+        Promise.all(promises).then((snapshot) => {
+            // iterate over each audition
+            snapshot.forEach((childSnapshot) => {
+                // store each audition in the array that gets dispatched to set the state
+                userAuditions.push({
+                    // append audition's ID to the audition object
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                })
+            })
+            // dispatch userAuditions to the store
+            dispatchAuditions(setAuditions(userAuditions))
+        })
+    }) 
 };

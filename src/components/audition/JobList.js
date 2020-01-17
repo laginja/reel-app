@@ -5,13 +5,7 @@ import JobListItem from './JobListItem';
 const JobList = () => {
 
     const { audition } = useContext(JobsContext)
-
-    let jobListItems = []
     
-    /* for (var i in audition.jobs) {
-        jobListItems.push(audition.jobs[i])
-    }  */
-
     return (
         <div className="list-body">
             {audition.jobs.length === 0 ? (

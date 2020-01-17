@@ -26,8 +26,7 @@ const AllAuditionsPage = () => {
             setAuditionsLoaded(true)
         })
     }, [])
-
-    console.log(auditions)
+    
     return (
         <AuditionsContext.Provider value={{ auditions, dispatchAuditions, filters, dispatchFilters }}>
             <AuditionListFilters />
