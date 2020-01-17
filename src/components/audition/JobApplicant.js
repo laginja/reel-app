@@ -6,7 +6,7 @@ import usersReducer from '../../reducers/users';
 const JobApplicant = ({ jobApplicant }) => {
 
     const [applicant, dispatchApplicant] = useReducer(usersReducer, [])
-    const applicantId = jobApplicant.userId
+    const applicantId = jobApplicant.id
 
     useEffect(() => {
         // fetch applicant on component mount. Needed to get displayName for the applicant
@@ -14,7 +14,7 @@ const JobApplicant = ({ jobApplicant }) => {
     }, [applicantId])
 
     return (
-        <Link to={`/user/${jobApplicant.userId}`}>
+        <Link to={`/user/${jobApplicant.id}`}>
             <div>{applicant.displayName}</div>
         </Link>    
     )

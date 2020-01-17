@@ -40,7 +40,7 @@ export const startAddAudition = (auditionData = {}) => {
         jobs.forEach((job) => {
             database.ref(`auditions/${auditionId}/jobs`).push(job)
         })
-
+        
         database.ref(`users/${ownerId}/auditions`).push(auditionId)
         //  after the data if pushed, call dispatch to add data to redux store
         /* dispatchAuditions(addAudition({
@@ -51,19 +51,39 @@ export const startAddAudition = (auditionData = {}) => {
 };
 
 /* RemoveAudition - return an object that gets dispatched to change the state */
-export const removeAudition = ({ id }) => {
+export const removeAudition = (id) => {
     return {
         type: 'REMOVE_AUDITION',
         id: id
     }
 };
 
-/* ASYNC action that is responsible for removing data from firebase */
+/* Triggers when a user deletes an audition */
 export const startRemoveAudition = (dispatchAuditions, audition = {}) => {
-    const { id } = audition
-    /* consider returning this promise for later usage */
-    database.ref(`auditions/${id}`).remove().then(() => {
-        dispatchAuditions(removeAudition({ id }));
+    const { id: auditionId, ownerId } = audition
+    // TODO: consider returning this promise for later usage 
+    // remove audition from the 'auditions' object
+    database.ref(`auditions/${auditionId}`).remove().then(() => {
+
+        // remove the same audition from the 'users' object
+        // fetch all auditions of the owner
+        database.ref(`users/${ownerId}/auditions`).once('value').then((snapshot) => {
+            let auditionToRemove = undefined
+
+            // iterate over user's auditions
+            snapshot.forEach((childSnapshot) => {
+                // find the one that has the value of deleted audition
+                if(childSnapshot.val() === auditionId) {       
+                    // get that audition's key
+                    auditionToRemove = childSnapshot.key
+                }
+            })
+
+            // remove audition from the 'users' object based on the key
+            database.ref(`users/${ownerId}/auditions/${auditionToRemove}`).remove().then(() => {
+                dispatchAuditions(removeAudition(auditionId));
+            })
+        })
     });
 };
 
@@ -75,7 +95,7 @@ export const setAuditions = (auditions) => {
     };
 };
 
-/* ASYNC action that is responsible for fetching data from firebase */
+/* Triggers when user visits the AllAuditionsPage */
 export const startSetAuditions = (dispatchAuditions) => {
 
     return database.ref(`auditions/`).once('value').then((snapshot) => {
@@ -154,6 +174,40 @@ export const startFetchUserAuditions = (userId, dispatchAuditions) => {
             })
             // dispatch userAuditions to the store
             dispatchAuditions(setAuditions(userAuditions))
+        })
+    }) 
+};
+
+/* Fetch auditions from the DB for the given user */
+export const startFetchUserApplications = (userId, dispatchAuditions) => {
+
+    // get all user application
+    return database.ref(`users/${userId}/applications`).once('value').then((snapshot) => {
+        // array to store applications state
+        const userApplications = []
+
+        // array to store promises
+        const promises = []
+
+        // iterate over each audition to get it's ID
+        snapshot.forEach((childSnapshot) => {
+            // query for that audition in the 'auditions' object and push the returned promise to the array
+            promises.push(database.ref(`auditions/${childSnapshot.val()}`).once('value'))
+        })
+
+        // make sure to execute this only after all auditions have been queried
+        Promise.all(promises).then((snapshot) => {
+            // iterate over each audition
+            snapshot.forEach((childSnapshot) => {
+                // store each audition in the array that gets dispatched to set the state
+                userApplications.push({
+                    // append audition's ID to the audition object
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                })
+            })
+            // dispatch userApplications to the store
+            dispatchAuditions(setAuditions(userApplications))
         })
     }) 
 };

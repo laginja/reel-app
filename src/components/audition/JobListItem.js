@@ -19,7 +19,7 @@ const JobListItem = ({ job }) => {
     // 'applicants' is an object so we need to iterate over it like a collection 
     for (var i in applicants) {
         // check if user is one of the applicants
-        if (applicants[i].userId === userUid) {
+        if (applicants[i].id === userUid) {
             // set user's ID (ref.key) so the user can be deleted from the DB by the 'ref.key'
             userId = applicants[i].id
             // change the 'Apply' button to 'Applied'
@@ -54,7 +54,7 @@ const JobListItem = ({ job }) => {
                     <div>
                         <h3>Applicants:</h3>
                         {
-                            applicants.map(jobApplicant => <JobApplicant key={jobApplicant.userId} jobApplicant={jobApplicant} />)
+                            applicants.map(jobApplicant => <JobApplicant key={jobApplicant.id} jobApplicant={jobApplicant} />)
                         }
                     </div>
                 )}
