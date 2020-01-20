@@ -62,40 +62,44 @@ export const removeAudition = (id) => {
 };
 
 /* Triggers when a user deletes an audition */
+/* When deleting an audition we need to delete audition data in multiple objects */
 export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
     const { id: auditionId, ownerId, jobs } = audition
 
-    const jobsPromises = []
-
+    // array to store applicants which need to be deleted
     const applicantsToRemove = []
 
+    // array to store jobs which need to be deleted
     const jobsToRemove = []
 
-    console.log(jobs)
-
-    // iterate over jobs collection
+    // iterate over jobs collection of an audition in order to get all applicants 
     for (var job in jobs) {
         // get each job's id
         const jobId = jobs[job]
 
-        // query for that job in the 'jobs' object and push the returned promise to the array
+        // query for that job in the 'jobs' object
         database.ref(`jobs/${jobId}`).once('value').then((snapshot) => {
-            const jobId = snapshot.key
-            for (var applicant in snapshot.val().applicants) {
-                const applicantId = snapshot.val().applicants[applicant]
-
-                applicantsToRemove.push(applicantId)
-                console.log(applicantsToRemove)
-            }
-
+            // add the job ID to the jobsToRemove array because we need to remove those jobs from the 'users' object
             jobsToRemove.push(jobId)
-            console.log("jobs", jobsToRemove)
+
+            // iterate through job's applicants
+            for (var applicant in snapshot.val().applicants) {
+                // get applicantId
+                const applicantId = snapshot.val().applicants[applicant]
+                // push that ID to the array because we need to know which users have applied for the job
+                applicantsToRemove.push(applicantId)
+            }
+            // remove the job from the DB
             database.ref(`jobs/${jobId}`).remove().then(() => {
+                // iterate over users that have applied for the job
                 applicantsToRemove.forEach((applicant) => {
+                    // find their applications
                     database.ref(`users/${applicant}/applications`).once('value').then((snapshot) => {  
-        
+                        // iterate over users job application
                         snapshot.forEach((childSnapshot) => {
+                            // check if job application is in jobsToRemove array
                             if (jobsToRemove.includes(childSnapshot.val())) {
+                                // remove job application from 'users' object
                                 database.ref(`users/${applicant}/applications/${childSnapshot.key}`).remove()
                             }
                         })
@@ -128,18 +132,6 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
             })
         })
     }
-
-    // make sure to execute this only after all auditions have been queried
-    Promise.all(jobsPromises).then((snapshot) => {
-        // iterate over each audition
-        snapshot.forEach((childSnapshot) => {
-            
-        })
-
-        
-    })
-
-
 };
 
 /* SetAuditions - return an object that gets dispatched to change the state */
@@ -192,7 +184,6 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
         for (var jobItem in snapshot.val().jobs) {
             // get each job's id
             const jobId = snapshot.val().jobs[jobItem]
-
             // query for that job in the 'jobs' object and push the returned promise to the array
             promises.push(database.ref(`jobs/${jobId}`).once('value'))
         }
@@ -213,7 +204,6 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
             // replace jobs collection with jobs array because it's easier to manipulate later
             audition = { ...audition, jobs }
 
-            console.log(audition)
             // add audition to the component state
             dispatchAudition(fetchAudition(audition))
         })
