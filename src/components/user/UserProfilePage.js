@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { startFetchUser } from '../../actions/users';
-import { startFetchUserAuditions, startFetchUserApplications } from '../../actions/auditions';
+import { startFetchUserAuditions, startFetchUserJobApplications } from '../../actions/auditions';
 import auditionsReducer from '../../reducers/auditions';
 import usersReducer from '../../reducers/users';
 import AuthContext from '../../context/auth-context';
@@ -13,13 +13,13 @@ const UserProfilePage = (props) => {
     const [user, dispatchUser] = useReducer(usersReducer, [])
     // state to represent user owned auditions
     const [userAuditions, dispatchUserAuditions] = useReducer(auditionsReducer, [])
-    // state to represent auditions the user applied to
-    const [userApplications, dispatchUserApplications] = useReducer(auditionsReducer, [])
+    // state to represent jobs the user applied to
+    const [userJobApplications, dispatchUserJobApplications] = useReducer(auditionsReducer, [])
 
     // state to track if userAuditions have been loaded 
     const [userAuditionsLoaded, setUserAuditionsLoaded] = useState(false)
     // state to track if appliedAuditions have been loaded 
-    const [userApplicationsLoaded, setUserApplicationsLoaded] = useState(false)
+    const [userJobApplicationsLoaded, setUserJobApplicationsLoaded] = useState(false)
 
     // Get currently logged in user 
     const { currentUser } = useContext(AuthContext)
@@ -41,9 +41,9 @@ const UserProfilePage = (props) => {
             setUserAuditionsLoaded(true)
         })
         // Fetch applications for this user
-        startFetchUserApplications(uid, dispatchUserApplications).then(() => {
+        startFetchUserJobApplications(uid, dispatchUserJobApplications).then(() => {
             // appliedUserAuditions have been loaded, set to true
-            setUserApplicationsLoaded(true)
+            setUserJobApplicationsLoaded(true)
         })
         
     }, [uid])
@@ -59,8 +59,8 @@ const UserProfilePage = (props) => {
             }) ) : <Loading />}
 
             { isUserOwner() ? <h3>My applications</h3> : <h3>{user.displayName}'s application</h3>}
-            { userApplicationsLoaded ? (userApplications.map((userApplication) => {
-                return <Link to={`/audition/${userApplication.id}`} key={userApplication.id}><h5>{userApplication.title}</h5></Link>
+            { userJobApplicationsLoaded ? (userJobApplications.map((userJobApplication) => {
+                return <Link to={`/audition/${userJobApplication.auditionId}`} key={userJobApplication.id}><h5>{userJobApplication.job}</h5></Link>
             }) ) : <Loading />}
         </div>
     )

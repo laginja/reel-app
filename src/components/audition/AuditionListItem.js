@@ -12,7 +12,7 @@ const AuditionListItem = ({ audition }) => {
     //const { currentUser } = useContext(AuthContext)
 
     const removeAudition = () => {
-        startRemoveAudition(dispatchAuditions, audition)
+        startRemoveAudition(audition, dispatchAuditions)
     }
 
     const [owner, dispatchOwner] = useReducer(usersReducer, [])

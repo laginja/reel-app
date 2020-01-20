@@ -40,7 +40,7 @@ const JobListItem = ({ job }) => {
 
     useEffect(() => {
         // fetch all applicant for this job when the component mounts
-        startSetApplicants(auditionId, jobId, dispatchApplicants)
+        startSetApplicants(jobId, dispatchApplicants)
     }, [auditionId, jobId])
 
     return (

@@ -15,13 +15,13 @@ export const startApplyToJob = (auditionId, jobId, userId, dispatchApplicants) =
     let applicant = { id: userId }
 
     // add applicant to the DB
-    return database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants`).push(userId).then(() => {
+    return database.ref(`jobs/${jobId}/applicants`).push(userId).then((ref) => {
         // dispatch that applicant to update the component state 
         dispatchApplicants(applyToJob(applicant))
 
         // add auditionId to the 'users' object under 'applications'
         // this way we track user's applications under 'users' object 
-        database.ref(`users/${userId}/applications`).push(auditionId)
+        database.ref(`users/${userId}/applications`).push(jobId)
     });
 };
 
@@ -37,7 +37,7 @@ export const unapplyFromJob = (id) => {
 export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchApplicants) => {
 
     // get all applicants for the job
-    database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants`).once('value').then((snapshot) => {
+    database.ref(`jobs/${jobId}/applicants`).once('value').then((snapshot) => {
         let applicantToRemove = undefined
         // iterate over all of them
         snapshot.forEach((childSnapshot) => {
@@ -47,21 +47,21 @@ export const startUnapplyFromJob = (auditionId, jobId, userId, dispatchApplicant
                 applicantToRemove = childSnapshot.key
             }
         })
-        // remove applicant from the 'applicants' object by it's key 
-        database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants/${applicantToRemove}`).remove().then(() => {
+        // remove applicant from the 'jobs' object by it's key 
+        database.ref(`jobs/${jobId}/applicants/${applicantToRemove}`).remove().then(() => {
             // get all user's applications
             database.ref(`users/${userId}/applications`).once('value').then((snapshot) => {
-                let applicationToRemove = undefined
+                let jobToRemove = undefined
                 // iterate over all of them
                 snapshot.forEach((childSnapshot) => {
-                    // find the audition he applied to in the auditions list
-                    if (childSnapshot.val() === auditionId) {
-                        // get audition's key
-                        applicationToRemove = childSnapshot.key
+                    // find the job he applied to in the auditions list
+                    if (childSnapshot.val() === jobId) {
+                        // get job's key
+                        jobToRemove = childSnapshot.key
                     }
                 })
                 // remove audition from the applications for the user in 'users' object
-                database.ref(`users/${userId}/applications/${applicationToRemove}`).remove().then(() => {
+                database.ref(`users/${userId}/applications/${jobToRemove}`).remove().then(() => {
                     // remove applicant from component state
                     dispatchApplicants(unapplyFromJob(userId))
                 })
@@ -79,10 +79,10 @@ export const setApplicants = (applicants) => {
 };
 
 /* Triggers when the component mounts to retrieve all applicants for a JobListItem */
-export const startSetApplicants = (auditionId, jobId, dispatchApplicants) => {
+export const startSetApplicants = (jobId, dispatchApplicants) => {
 
     // get all applicants of a job
-    return database.ref(`auditions/${auditionId}/jobs/${jobId}/applicants`).once('value').then((snapshot) => {
+    return database.ref(`jobs/${jobId}/applicants`).once('value').then((snapshot) => {
         const applicants = [];
 
         // iterate over all of them
