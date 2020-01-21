@@ -1,4 +1,4 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState, useContext, useReducer, useEffect } from 'react';
 import { SingleDatePicker } from 'react-dates';
 import { addCrewMemberInput, removeCrewMemberInput, setCrewMemberInputs } from '../../actions/crewMembersInput';
 import moment from 'moment';
@@ -93,6 +93,17 @@ const AuditionForm = (props) => {
             setAuditionDate('')
         }
     };
+
+    
+    useEffect(() => {
+        setTitle(props.audition.title)
+        setDescription(props.audition.description)
+        setCategory(props.audition.category)
+        setLocation(props.audition.location)
+        setPaid(false)
+        setAuditionDate(moment(props.audition.auditionDate))
+        dispatchCrewMembers(setCrewMemberInputs(props.audition.jobs))
+    }, [])
 
     return (
         <form className="form" onSubmit={onSubmit}>

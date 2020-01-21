@@ -1,18 +1,32 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useState, useReducer, useContext } from 'react';
 import { startFetchAudition } from '../../actions/auditions';
 import moment from 'moment';
 import auditionsReducer from '../../reducers/auditions';
+import AuthContext from '../../context/auth-context'
 import JobsContext from '../../context/jobs-context';
 import JobList from './JobList';
 import Loading from '../Loading';
 
 const AuditionPage = (props) => {
 
-    const { id: auditionId } = props.match.params
-    
+    const {
+        id: auditionId
+    } = props.match.params
+
+    // Get currently logged in user 
+    const { currentUser } = useContext(AuthContext)
+
     // create states and provide dispatch function for the reducer to update that state
     const [audition, dispatchAudition] = useReducer(auditionsReducer, [])
     const [auditionLoaded, setAuditionLoaded] = useState(false)
+
+    const isUserOwner = () => {
+        if (currentUser.uid === audition.ownerId) {
+            return true
+        } else {
+            return false
+        }
+    }
 
     useEffect(() => {
         startFetchAudition(auditionId, dispatchAudition).then(() => {
@@ -24,6 +38,12 @@ const AuditionPage = (props) => {
         <div className="content-main__item-wide">
             {!auditionLoaded ? <Loading /> : (
                 <div>
+                    {isUserOwner() ? <button onClick={() => {
+                        // redirect to EditAuditionPage
+                        props.history.push(`/editAudition/${auditionId}`)
+                    }}>Edit</button>
+                        : ""
+                    }
                     <h1>{audition.title}</h1>
                     <h5>Added {moment(audition.createdAt).format('DD MMMM, YYYY')}</h5>
                     <div className="audition-page__under-header">
@@ -63,7 +83,7 @@ const AuditionPage = (props) => {
                             <div>
                                 <span>No jobs specified</span>
                             </div>
-                        ) : (   
+                        ) : (
                                 /* TODO refactor audition to store it's ID */
                                 <JobsContext.Provider value={{ audition, auditionId }}>
                                     <JobList />
