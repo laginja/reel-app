@@ -71,12 +71,13 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
 
     // array to store jobs which need to be deleted
     const jobsToRemove = []
-
+    console.log("here")
     // iterate over jobs collection of an audition in order to get all applicants 
     for (var job in jobs) {
         // get each job's id
         const jobId = jobs[job]
 
+        
         // query for that job in the 'jobs' object
         database.ref(`jobs/${jobId}`).once('value').then((snapshot) => {
             // add the job ID to the jobsToRemove array because we need to remove those jobs from the 'users' object
@@ -105,33 +106,59 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
                         })
                     })
                 })
-
-                // remove audition from the 'auditions' object
-                database.ref(`auditions/${auditionId}`).remove().then(() => {
-
-                    // remove the same audition from the 'users' object
-                    // fetch all auditions of the owner
-                    database.ref(`users/${ownerId}/auditions`).once('value').then((snapshot) => {
-                        let auditionToRemove = undefined
-
-                        // iterate over user's auditions
-                        snapshot.forEach((childSnapshot) => {
-                            // find the one that has the value of deleted audition
-                            if (childSnapshot.val() === auditionId) {
-                                // get that audition's key
-                                auditionToRemove = childSnapshot.key
-                            }
-                        })
-
-                        // remove audition from the 'users' object based on the key
-                        database.ref(`users/${ownerId}/auditions/${auditionToRemove}`).remove().then(() => {
-                            dispatchAuditions(removeAudition(auditionId));
-                        })
-                    })
-                });
             })
         })
     }
+
+    // remove audition from the 'auditions' object
+    database.ref(`auditions/${auditionId}`).remove().then(() => {
+
+        // remove the same audition from the 'users' object
+        // fetch all auditions of the owner
+        database.ref(`users/${ownerId}/auditions`).once('value').then((snapshot) => {
+            let auditionToRemove = undefined
+
+            // iterate over user's auditions
+            snapshot.forEach((childSnapshot) => {
+                // find the one that has the value of deleted audition
+                if (childSnapshot.val() === auditionId) {
+                    // get that audition's key
+                    auditionToRemove = childSnapshot.key
+                }
+            })
+
+            // remove audition from the 'users' object based on the key
+            database.ref(`users/${ownerId}/auditions/${auditionToRemove}`).remove().then(() => {
+                dispatchAuditions(removeAudition(auditionId));
+            })
+        })
+    });
+};
+
+/* ASYNC action that is responsible for adding data to firebase */
+export const startEditAudition = (auditionId, auditionData = {}) => {
+
+    const {
+        title = '',
+        description = '',
+        createdAt = 0,
+        category = '',
+        auditionDate = 0,
+        location = '',
+        paid = 'false',
+        jobs = [],
+        ownerId = null
+    } = auditionData;
+
+    const audition = { title, description, createdAt, category, auditionDate, location, paid, ownerId }
+
+    /* consider returning this promise for later usage */
+    database.ref(`auditions/${auditionId}`).update(audition).then(() => {
+        
+        jobs.forEach((job) => {
+            database.ref(`jobs/${job.id}`).update(job)
+        })
+    });
 };
 
 /* SetAuditions - return an object that gets dispatched to change the state */
@@ -217,13 +244,17 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
                 // iterate over each job
                 snapshot.forEach((childSnapshot) => {
                     // store each job in the array that gets dispatched to set the state
+                    console.log("job id", childSnapshot.key)
+                    console.log("job data", childSnapshot.val())
                     jobs.push({
                         // set job info
                         ...childSnapshot.val(),
-                        // replace/append job ID 
-                        id: childSnapshot.key
+                        // replace/append job ID    
+                        id: childSnapshot.key   
                     })
                 })
+
+                console.log("jobs after fill", jobs)
 
                 // resolve with an array of job objects
                 resolve(jobs)
@@ -235,7 +266,7 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     const dispatch = ((jobs, audition) => {
         return new Promise((resolve) => {
             // replace jobs collection with jobs array because it's easier to manipulate later
-            audition = { ...audition, jobs }
+            audition = {id: auditionId, ...audition, jobs }
 
             // add audition to the component state
             dispatchAudition(fetchAudition(audition))
@@ -254,53 +285,6 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
     }).then((jobs) => {
         return dispatch(jobs, audition)
     })
-
-
-    // console.log("second")
-    // // fetch audition from the DB
-    // database.ref(`auditions/${auditionId}`).once('value').then((snapshot) => {
-    //     console.log("third")
-    //     // store audition data in a variable
-    //     let audition = snapshot.val()
-
-    //     // array to store jobs state
-    //     const jobs = []
-
-    //     // array to store promises
-    //     const promises = []
-
-    //     // iterate over jobs collection
-    //     for (var jobItem in snapshot.val().jobs) {
-    //         // get each job's id
-    //         const jobId = snapshot.val().jobs[jobItem]
-    //         // query for that job in the 'jobs' object and push the returned promise to the array
-    //         promises.push(database.ref(`jobs/${jobId}`).once('value'))
-    //     }
-
-    //     // make sure to execute this only after all jobs have been queried
-    //     Promise.all(promises).then((snapshot) => {
-    //         // iterate over each job
-    //         snapshot.forEach((childSnapshot) => {
-    //             // store each job in the array that gets dispatched to set the state
-    //             jobs.push({
-    //                 // set job info
-    //                 ...childSnapshot.val(),
-    //                 // replace/append job ID 
-    //                 id: childSnapshot.key
-    //             })
-    //         })
-
-    //         // replace jobs collection with jobs array because it's easier to manipulate later
-    //         audition = { ...audition, jobs }
-
-    //         console.log("fourth")
-    //         // add audition to the component state
-    //         dispatchAudition(fetchAudition(audition))
-
-    //         return done
-    //     })
-
-    // });
 };
 
 /* Fetch auditions from the DB for the given user */
