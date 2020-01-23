@@ -12,7 +12,6 @@ const AuditionListItem = ({ audition }) => {
     //const { currentUser } = useContext(AuthContext)
 
     const removeAudition = () => {
-        console.log("list item")
         startRemoveAudition(audition, dispatchAuditions)
     }
 

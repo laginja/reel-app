@@ -6,6 +6,7 @@ import AppRouter, { history } from './routers/AppRouter';
 
 /* Styles */
 import 'normalize.css/normalize.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/styles.scss';
 import * as serviceWorker from './serviceWorker';
 

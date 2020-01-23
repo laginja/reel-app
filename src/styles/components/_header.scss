@@ -13,8 +13,26 @@
     color: white;
     // clear default text decoraions
     text-decoration: none;
-
-    h1 {
+    
+    h1 {    
         margin: 0;
     }
+}
+
+.header__dropdown-toggle {
+    font-size: $m-size;
+}
+
+.header__menu {
+    font-size: $m-size;
+    padding: 0;
+
+    .item {
+        font-weight: bold;
+    }
+}
+
+.profile-picture {
+    height: 50px;
+    border-radius: 50%;
 }

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
 import { startLogout } from '../actions/auth';
 import AuthContext from '../context/auth-context';
 
-// 'NavLink' is basically the same as 'Link' but has some features better suited for navigation
 const Header = () => {
     const { currentUser } = useContext(AuthContext)
 
@@ -14,16 +14,19 @@ const Header = () => {
                     <Link className="header__title" to="/">
                         <h1>Reels</h1>
                     </Link>
-                    <Link to={`/user/${currentUser.uid}`}>
-                        <h3 className="header__title">
-                            Welcome, {currentUser.displayName}
-                        </h3>
-                    </Link>
+                    
+                    <img src={currentUser.photoURL} className="profile-picture" alt="User image" />
+                    <Dropdown>
+                        <Dropdown.Toggle id="dropdown-basic" className="header__dropdown-toggle">
+                            {currentUser.displayName}
+                        </Dropdown.Toggle>
 
-                    <Link className="header__title" to="/createAudition">
-                        <h3>Create Audition</h3>
-                    </Link>
-                    <button className="button button--link" onClick={startLogout}>Logout</button>
+                        <Dropdown.Menu className="header__menu">
+                            <Dropdown.Item href={`/user/${currentUser.uid}`}>Profile</Dropdown.Item>
+                            <Dropdown.Item href={'/createAudition'}>Create Audition</Dropdown.Item>
+                            <Dropdown.Item onClick={startLogout} className="item">Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
             </div>
         </header>

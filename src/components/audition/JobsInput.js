@@ -6,7 +6,7 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const jobId = `job-${job.id}`;
     const descriptionId = `descriptionId-${job.id}`;
 
-    /* Remove Crew members */
+    /* Remove Job */
     const handleRemovejob = (e) => {
         removeJob(e, job);
     };
@@ -14,7 +14,7 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     return (
         <div key={`member-${job.id}`} className="crew-member-input">
             <div className="crew-member-input__header">
-                <h3>Member #{job.id + 1}</h3>
+                <h3>Member #{index + 1}</h3>
                 <button className="button button--remove" onClick={handleRemovejob}>X</button>
             </div>
             <input
@@ -37,7 +37,6 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
                 value={job.description}
                 onChange={handleJobInputChange}
             />
-
         </div>
     );
 };
