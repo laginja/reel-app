@@ -1,0 +1,12 @@
+.dropdown__toggle {
+    font-size: $m-size;
+}
+
+.dropdown__menu {
+    font-size: $m-size;
+    padding: 0;
+
+    .item {
+        font-weight: bold;
+    }
+}

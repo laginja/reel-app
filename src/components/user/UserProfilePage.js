@@ -5,6 +5,7 @@ import { startFetchUserAuditions, startFetchUserJobApplications } from '../../ac
 import auditionsReducer from '../../reducers/auditions';
 import usersReducer from '../../reducers/users';
 import AuthContext from '../../context/auth-context';
+import Button from 'react-bootstrap/Button';
 import Loading from '../Loading';
 
 const UserProfilePage = (props) => {
@@ -50,8 +51,12 @@ const UserProfilePage = (props) => {
 
     return (
         <div className="content-main__item-wide">
-            { isUserOwner() ? <button>Edit</button> : ""}
-            <h1>{user.displayName}</h1>
+            <div className="user-profile__cover">
+                
+            </div>
+            { isUserOwner() ? <Button variant="outline-warning">Edit</Button> : ""}
+            <h1 className="user-profile__username">{user.displayName}</h1>
+            <span className="user-profile__profession">{user.profession}</span>
 
             { isUserOwner() ? <h3>My auditions</h3> : <h3>{user.displayName}'s auditions</h3>}
             { userAuditionsLoaded ? (userAuditions.map((userAudition) => {

@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import { startApplyToJob, startUnapplyFromJob, startSetApplicants } from '../../actions/applicants';
 import applicantsReducer from '../../reducers/applicants';
 import AuthContext from '../../context/auth-context';
-import JobApplicant from './JobApplicant';
 import JobsContext from '../../context/jobs-context';
+import Button from 'react-bootstrap/Button';
+import JobApplicant from './JobApplicant';
 
 const JobListItem = ({ job }) => {
 
@@ -47,7 +48,7 @@ const JobListItem = ({ job }) => {
         <div >
             <h3>{job.job}</h3>
             <p>{job.description}</p>
-            {hasApplied ? <button onClick={unapplyFromJob}>Applied</button> : <button onClick={applyToJob}>Apply</button>}
+            {hasApplied ? <Button variant="outline-danger" onClick={unapplyFromJob}>Applied</Button> : <Button variant="success" onClick={applyToJob}>Apply</Button>}
             {applicants.length === 0 ? (
                 <p>No Applicants for this job</p>
             ) : (

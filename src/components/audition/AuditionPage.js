@@ -5,6 +5,7 @@ import auditionsReducer from '../../reducers/auditions';
 import AuthContext from '../../context/auth-context'
 import JobsContext from '../../context/jobs-context';
 import JobList from './JobList';
+import Button from 'react-bootstrap/Button';
 import Loading from '../Loading';
 
 const AuditionPage = (props) => {
@@ -38,10 +39,10 @@ const AuditionPage = (props) => {
         <div className="content-main__item-wide">
             {!auditionLoaded ? <Loading /> : (
                 <div>
-                    {isUserOwner() ? <button onClick={() => {
+                    {isUserOwner() ? <Button variant="outline-warning" onClick={() => {
                         // redirect to EditAuditionPage
                         props.history.push(`/editAudition/${auditionId}`)
-                    }}>Edit</button>
+                    }}>Edit</Button>
                         : ""
                     }
                     <h1>{audition.title}</h1>

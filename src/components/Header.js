@@ -15,15 +15,16 @@ const Header = () => {
                         <h1>Reels</h1>
                     </Link>
                     
-                    <img src={currentUser.photoURL} className="profile-picture" alt="User image" />
+                    <img src={currentUser.photoURL} className="profile-picture" alt="" />
                     <Dropdown>
-                        <Dropdown.Toggle id="dropdown-basic" className="header__dropdown-toggle">
+                        <Dropdown.Toggle id="dropdown-basic" className="dropdown__toggle">
                             {currentUser.displayName}
                         </Dropdown.Toggle>
 
-                        <Dropdown.Menu className="header__menu">
+                        <Dropdown.Menu className="dropdown__menu">
                             <Dropdown.Item href={`/user/${currentUser.uid}`}>Profile</Dropdown.Item>
                             <Dropdown.Item href={'/createAudition'}>Create Audition</Dropdown.Item>
+                            <Dropdown.Divider/>
                             <Dropdown.Item onClick={startLogout} className="item">Logout</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
