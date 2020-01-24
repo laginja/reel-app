@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AllAuditionsPage from './audition/AllAuditionsPage';
 import AllPeoplePage from './user/AllPeoplePage';
 
 const ReelsDashboardPage = () => {
     const [selection, setSelection] = useState('auditions');
+
+    const [history, setHistory] = useState([])
+
+    useEffect(() => {
+        const recentHistory = JSON.parse(localStorage.getItem('history'))
+
+        if (recentHistory)
+            setHistory(recentHistory)
+            console.log(recentHistory)
+    }, [])
     
     return (
         <div className="content-main__item-wide">
@@ -15,6 +25,11 @@ const ReelsDashboardPage = () => {
             <div>
                 { selection === 'auditions' ? <AllAuditionsPage /> : <AllPeoplePage />}    
             </div>
+            {
+                history.map((element) => {
+                    return <p>{element}</p>
+                })
+            }
         </div>
         
     )

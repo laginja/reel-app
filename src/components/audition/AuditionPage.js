@@ -4,8 +4,9 @@ import moment from 'moment';
 import auditionsReducer from '../../reducers/auditions';
 import AuthContext from '../../context/auth-context'
 import JobsContext from '../../context/jobs-context';
-import JobList from './JobList';
 import Button from 'react-bootstrap/Button';
+import Stack from '../../helpers/stack';
+import JobList from './JobList';
 import Loading from '../Loading';
 
 const AuditionPage = (props) => {
@@ -30,6 +31,16 @@ const AuditionPage = (props) => {
     }
 
     useEffect(() => {
+        let history = JSON.parse(localStorage.getItem('history'))
+        
+        if (history) {
+            history.push(auditionId)
+        } else {
+            history = new Stack()
+            history.push(auditionId)
+        }
+
+        localStorage.setItem('history', JSON.stringify(history))
         startFetchAudition(auditionId, dispatchAudition).then(() => {
             setAuditionLoaded(true)
         })
