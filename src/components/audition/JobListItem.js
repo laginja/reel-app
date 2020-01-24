@@ -30,13 +30,14 @@ const JobListItem = ({ job }) => {
     
     // apply to a job
     const applyToJob = () => {
-        startApplyToJob(auditionId, jobId, userUid, dispatchApplicants)
+        startApplyToJob(jobId, userUid, dispatchApplicants)
     }
 
     // unapply from a job
     const unapplyFromJob = () => {
-        startUnapplyFromJob(auditionId, jobId, userId, dispatchApplicants)
-        hasApplied = false
+        startUnapplyFromJob(jobId, userId, dispatchApplicants).then(() => {
+            hasApplied = false
+        })
     }
 
     useEffect(() => {
