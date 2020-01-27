@@ -304,7 +304,7 @@ export const startFetchAudition = (auditionId = null, dispatchAudition) => {
             // add audition to the component state
             dispatchAudition(fetchAudition(audition))
             // resolve with nothing
-            resolve()
+            resolve(audition)
         })
     })
 

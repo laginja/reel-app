@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import History from '../helpers/stack';
 import AllAuditionsPage from './audition/AllAuditionsPage';
 import AllPeoplePage from './user/AllPeoplePage';
 
@@ -8,11 +9,10 @@ const ReelsDashboardPage = () => {
     const [history, setHistory] = useState([])
 
     useEffect(() => {
-        const recentHistory = JSON.parse(localStorage.getItem('history'))
+        let recentHistory = new History(JSON.parse(localStorage.getItem('history')))
 
         if (recentHistory)
-            setHistory(recentHistory)
-            console.log(recentHistory)
+            setHistory(recentHistory.reverse())
     }, [])
     
     return (
