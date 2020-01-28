@@ -5,7 +5,7 @@ import auditionsReducer from '../../reducers/auditions';
 import AuthContext from '../../context/auth-context'
 import JobsContext from '../../context/jobs-context';
 import Button from 'react-bootstrap/Button';
-import History from '../../helpers/stack';
+import History from '../../helpers/history';
 import JobList from './JobList';
 import Loading from '../Loading';
 
@@ -37,10 +37,10 @@ const AuditionPage = (props) => {
             setAuditionLoaded(true)
     
             if (history) {
-                history.enqueue(audition.title)
+                history.enqueue(audition)
             } else {
                 history = new History()
-                history.enqueue(audition.title)
+                history.enqueue(audition)
             }
     
             localStorage.setItem('history', JSON.stringify(history))

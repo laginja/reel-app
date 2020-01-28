@@ -2,10 +2,11 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { firebase } from '../firebase/firebase';
 import AuthContext from '../context/auth-context';
+import BrowsingHistory from '../components/browsing history/BrowsingHistory'
 import Header from '../components/Header';
 import RecommendedAuditions from '../components/RecommendedAuditions';
 
-const PrivateRoute = ({ component: Component, ...rest}) => {
+const PrivateRoute = ({ component: Component, componentName, ...rest}) => {
     /* get user that is logged-in */
     const currentUser = firebase.auth().currentUser
 
@@ -18,7 +19,8 @@ const PrivateRoute = ({ component: Component, ...rest}) => {
                         <div className="content-container-full">
                             <div className="content-main">
                                 <RecommendedAuditions />
-                                <Component {...props}/>    
+                                <Component {...props}/>
+                                {!componentName ? <BrowsingHistory /> : ""}                           
                             </div>
                         </div> 
                     </div>
