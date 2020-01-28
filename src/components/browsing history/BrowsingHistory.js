@@ -14,6 +14,7 @@ const BrowsingHistory = () => {
     
     return (
         <div>
+            <h3>Recently visited</h3>
             {
                 history.map((item) => (
                     <BrowsingHistoryItem key={item.id} item={item} />

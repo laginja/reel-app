@@ -12,6 +12,7 @@
 }
 
 .list-item {
+    background: #fff;
     border: 1px solid darken($off-white, 7%);
     color: $dark-grey;
     padding: $s-size;
@@ -24,7 +25,7 @@
     @media (min-width: $desktop-breakpoint) {
         flex: 1;
         padding: $m-size;
-        min-width: 25%;
-        max-width: 25%;
+        min-width: 20%;
+        max-width: 20%;
     }
 }

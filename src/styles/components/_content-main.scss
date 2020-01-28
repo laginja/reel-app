@@ -1,5 +1,6 @@
 .content-main {
     display: flex;
+    height: 93vh;
     justify-content: stretch;
 }
 
@@ -8,6 +9,11 @@
 }
 
 .content-main__item-wide {
+    background: $off-white;
     flex: 4;
     padding: 0 0 0 $m-size;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
