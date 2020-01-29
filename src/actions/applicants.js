@@ -9,10 +9,12 @@ export const applyToJob = (applicant) => {
 };
 
 /* Triggers when a user applies for a job in an audition  */
-export const startApplyToJob = (jobId, userId, dispatchApplicants) => {
+export const startApplyToJob = (job, userId, ownerId, auditionTitle, time, dispatchApplicants) => {
+
+    const { auditionId, id: jobId, job: jobTitle } = job
 
     const applyToJobPromise = (() => {
-        new Promise((resolve) => {
+        return new Promise((resolve) => {
             // create applicant object
             let applicant = { id: userId }
 
@@ -31,7 +33,29 @@ export const startApplyToJob = (jobId, userId, dispatchApplicants) => {
         })
     })
 
-    applyToJobPromise()
+    const notifiyOwnerPromise =(() => {
+        // create a notification object
+        const notification = {
+            auditionId,
+            auditionTitle,
+            jobTitle,
+            senderId: userId,
+            read: false,
+            time,
+            type: 'applied'
+        }
+
+        new Promise((resolve) => {
+            database.ref(`users/${ownerId}/notifications/`).push(notification).then(() => {
+                // resolve after everything before has finished
+                resolve()
+            })
+        })
+    })
+
+    applyToJobPromise().then(() => {
+        notifiyOwnerPromise()
+    })
 };
 
 /* Remove applicant from the component state */

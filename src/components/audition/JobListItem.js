@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { startApplyToJob, startUnapplyFromJob, startSetApplicants } from '../../actions/applicants';
+import moment from 'moment';
 import applicantsReducer from '../../reducers/applicants';
 import AuthContext from '../../context/auth-context';
 import JobsContext from '../../context/jobs-context';
 import Button from 'react-bootstrap/Button';
 import JobApplicant from './JobApplicant';
 
-const JobListItem = ({ job }) => {
+const JobListItem = ({ job, ownerId, auditionTitle }) => {
 
     const { currentUser } = useContext(AuthContext)
     const { auditionId } = useContext(JobsContext)
     const [applicants, dispatchApplicants] = useReducer(applicantsReducer, [])
 
     const userUid = currentUser.uid
-    const jobId = job.id
     let userId = null
     let hasApplied = false
 
@@ -30,20 +30,21 @@ const JobListItem = ({ job }) => {
     
     // apply to a job
     const applyToJob = () => {
-        startApplyToJob(jobId, userUid, dispatchApplicants)
+        const time = moment().valueOf();
+        startApplyToJob(job, userUid, ownerId, auditionTitle, time, dispatchApplicants)
     }
 
     // unapply from a job
     const unapplyFromJob = () => {
-        startUnapplyFromJob(jobId, userId, dispatchApplicants).then(() => {
+        startUnapplyFromJob(job.id, userId, dispatchApplicants).then(() => {
             hasApplied = false
         })
     }
 
     useEffect(() => {
         // fetch all applicant for this job when the component mounts
-        startSetApplicants(jobId, dispatchApplicants)
-    }, [auditionId, jobId])
+        startSetApplicants(job.id, dispatchApplicants)
+    }, [auditionId, job.id])
 
     return (
         <div >
