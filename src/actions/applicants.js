@@ -9,7 +9,7 @@ export const applyToJob = (applicant) => {
 };
 
 /* Triggers when a user applies for a job in an audition  */
-export const startApplyToJob = (job, userId, ownerId, auditionTitle, time, dispatchApplicants) => {
+export const startApplyToJob = (job, userId, userName, ownerId, auditionTitle, time, dispatchApplicants) => {
 
     const { auditionId, id: jobId, job: jobTitle } = job
 
@@ -42,7 +42,8 @@ export const startApplyToJob = (job, userId, ownerId, auditionTitle, time, dispa
             senderId: userId,
             read: false,
             time,
-            type: 'applied'
+            type: 'applied',
+            senderName: userName
         }
 
         new Promise((resolve) => {

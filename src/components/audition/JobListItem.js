@@ -13,7 +13,7 @@ const JobListItem = ({ job, ownerId, auditionTitle }) => {
     const { auditionId } = useContext(JobsContext)
     const [applicants, dispatchApplicants] = useReducer(applicantsReducer, [])
 
-    const userUid = currentUser.uid
+    const { uid: userUid = null, displayName: userName = null } = currentUser
     let userId = null
     let hasApplied = false
 
@@ -31,7 +31,7 @@ const JobListItem = ({ job, ownerId, auditionTitle }) => {
     // apply to a job
     const applyToJob = () => {
         const time = moment().valueOf();
-        startApplyToJob(job, userUid, ownerId, auditionTitle, time, dispatchApplicants)
+        startApplyToJob(job, userUid, userName, ownerId, auditionTitle, time, dispatchApplicants)
     }
 
     // unapply from a job

@@ -62,20 +62,11 @@ export const startSetUsers = (dispatchUsers) => {
     });
 };
 
-/* SetUser - return an object that gets dispatched to change the state */
-export const setNotifications = (notifications) => {
-    return {
-        type: 'SET_NOTIFICATIONS',
-        notifications: notifications
-    };
-};
-
 /**
  * Start listening for notifications
- * @param {*} userId 
+ * @param {string} userId 
  */
-export const startSubscribeToNotifications = (userId = null, dispatchNotifications) => {
-
+export const startSubscribeToNotifications = (userId = null, setNotifications) => {
     const newPromise = (() => {
         return new Promise(resolve => {
             const onNotificationUpdate = database.ref(`users/${userId}/notifications`).on('value', (snapshot) => {
@@ -83,16 +74,15 @@ export const startSubscribeToNotifications = (userId = null, dispatchNotificatio
         
                 // iterate over all of them
                 snapshot.forEach((childSnapshot) => {
-                    // add applicant to the 'applicants' array and append it the ID
+                    // add notification to the 'notifications' array
                     notifications.push(
                         childSnapshot.val()
                     );
                 });
-        
-                //dispatchNotifications(setNotifications(notifications))
-                console.log(notifications)
-                
-                resolve(notifications, this)
+                // set 'notifications' state
+                setNotifications(notifications)
+                // resolve with 
+                resolve(onNotificationUpdate)
             });
         })
     })
@@ -102,8 +92,8 @@ export const startSubscribeToNotifications = (userId = null, dispatchNotificatio
 
 /**
  * Unsubscribe from notifications
- * @param {*} userId 
- * @param {*} onNotificationChange 
+ * @param {string} userId 
+ * @param {function} onNotificationChange 
  */
 export const unSubscribeToNotifications = (userId = null, onNotificationChange) => {
     database.ref(`users/${userId}/notifications`).off('value', onNotificationChange);
