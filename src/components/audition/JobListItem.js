@@ -4,7 +4,6 @@ import moment from 'moment';
 import applicantsReducer from '../../reducers/applicants';
 import AuthContext from '../../context/auth-context';
 import JobsContext from '../../context/jobs-context';
-import Button from 'react-bootstrap/Button';
 import JobApplicant from './JobApplicant';
 
 const JobListItem = ({ job, ownerId, auditionTitle }) => {
@@ -50,7 +49,7 @@ const JobListItem = ({ job, ownerId, auditionTitle }) => {
         <div >
             <h3>{job.job}</h3>
             <p>{job.description}</p>
-            {hasApplied ? <Button variant="outline-danger" onClick={unapplyFromJob}>Applied</Button> : <Button variant="success" onClick={applyToJob}>Apply</Button>}
+            {hasApplied ? <button variant="outline-danger" onClick={unapplyFromJob}>Applied</button> : <button variant="success" onClick={applyToJob}>Apply</button>}
             {applicants.length === 0 ? (
                 <p>No Applicants for this job</p>
             ) : (

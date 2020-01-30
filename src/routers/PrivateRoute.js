@@ -16,7 +16,7 @@ const PrivateRoute = ({ component: Component, componentName, ...rest}) => {
                 !!currentUser ? (
                     <div>
                         <Header />
-                        <div className="content-container-full">
+                        <div className="container">
                             <div className="content-main">
                                 <div className="content-main__item-narrow">
                                     <RecommendedAuditions />

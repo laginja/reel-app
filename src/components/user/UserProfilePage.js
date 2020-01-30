@@ -5,7 +5,6 @@ import { startFetchUserAuditions, startFetchUserJobApplications } from '../../ac
 import auditionsReducer from '../../reducers/auditions';
 import usersReducer from '../../reducers/users';
 import AuthContext from '../../context/auth-context';
-import Button from 'react-bootstrap/Button';
 import Loading from '../Loading';
 
 const UserProfilePage = (props) => {
@@ -54,7 +53,7 @@ const UserProfilePage = (props) => {
             <div className="user-profile__cover">
                 
             </div>
-            { isUserOwner() ? <Button variant="outline-warning">Edit</Button> : ""}
+            { isUserOwner() ? <button variant="outline-warning">Edit</button> : ""}
             <h1 className="user-profile__username">{user.displayName}</h1>
             <span className="user-profile__profession">{user.profession}</span>
 
