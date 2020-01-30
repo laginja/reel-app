@@ -2,16 +2,25 @@ import React, { useState, useContext, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
 import { startLogout } from '../actions/auth';
-import { startSubscribeToNotifications, unSubscribeToNotifications } from '../actions/users';
+import { startSubscribeToNotifications, unSubscribeToNotifications, markNotificationsRead } from '../actions/users';
 import AuthContext from '../context/auth-context';
 
 const Header = () => {
-    const { currentUser } = useContext(AuthContext)
-    const [notifications, setNotifications] = useState([])
-    const [loaded, setLoaded] = useState(false)
+    const { currentUser } = useContext(AuthContext);
+    const [notifications, setNotifications] = useState([]);
+    const [loaded, setLoaded] = useState(false);
 
     const userId = currentUser.uid;
-    
+
+    const handleOnToggle = (show) => {
+        if (show) {
+            // mark notifications as read
+            notifications.map(not => not.read = true)
+            // update notifications in DB
+            markNotificationsRead(userId, notifications)
+        }
+    }
+
     // this mounts and unmounts as user visits new routes
     // for that reason we must unsubscribe from notifications everytime the component unmounts to prevent memory leak
     useEffect(() => {
@@ -21,6 +30,7 @@ const Header = () => {
             setLoaded(true)
             onNotificationChange = func
         })
+
         return () => {
             // unsubscribe from notifications by passing the callback function
             unSubscribeToNotifications(userId, onNotificationChange)
@@ -36,11 +46,15 @@ const Header = () => {
                     </Link>
 
                     <img src={currentUser.photoURL} className="profile-picture" alt="" />
-                    <Dropdown>
+                    <Dropdown onToggle={handleOnToggle}>
                         <Dropdown.Toggle id="dropdown-basic" className="dropdown__toggle">
                             {
                                 !!loaded ? (
-                                    notifications.length > 0 ? notifications.length : "You don't have any notifications"
+                                    notifications && notifications.length > 0 ? (
+                                        notifications.filter(not => not.read === false).length > 0 ? (
+                                            notifications.filter(not => not.read === false).length
+                                        ) : "0"
+                                    ) : "You don't have any notifications"
                                 ) :
                                     "0"
                             }

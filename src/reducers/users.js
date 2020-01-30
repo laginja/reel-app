@@ -6,8 +6,12 @@ const usersReducer = (state, action) => {
         case 'FIND_USER':
             return action.user;
         case 'SET_NOTIFICATIONS':
-            console.log("reducer", action.notifications)
             return action.notifications;
+        case 'MARK_NOTIFICATIONS_READ':
+            state.notifications.forEach(not => not.read = true)
+            return {
+                ...state
+            }
         default:
             return state;
     }
