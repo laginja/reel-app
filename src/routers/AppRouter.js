@@ -12,24 +12,48 @@ import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import UserProfilePage from '../components/user/UserProfilePage';
 
+// MUI
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+
 export const history = createHistory()
+
+// Create a palette for the app
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#029BEF',
+            main: '#0288d1',
+            dark: '#037CBD',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#FF4801',
+            main: '#F54400',
+            dark: '#E24002',
+            contrastText: '#fff',
+        },
+        default: {
+            main: '#fff'
+        },
+    },
+})
 
 const AppRouter = () => {
     return (
-        <Router history={history}>
-            <div>
+        <MuiThemeProvider theme={theme}>
+            <Router history={history}>
                 <Switch>
                     <PublicRoute path="/" component={LoginPage} exact={true} />
                     <PrivateRoute path="/index" component={ReelsDashboardPage} />
                     <PrivateRoute path="/createAudition" component={AddAuditionPage} />
-                    <PrivateRoute path="/user/:id" component={UserProfilePage} componentName="UserProfilePage"/>
+                    <PrivateRoute path="/user/:id" component={UserProfilePage} componentName="UserProfilePage" />
                     <PrivateRoute path="/audition/:id" component={AuditionPage} />
                     <PrivateRoute path="/editAudition/:id" component={EditAuditionPage} />
-                    <Route component={NotFoundPage}/>
+                    <Route component={NotFoundPage} />
                 </Switch>
-            </div>
-        </Router>
-        
+            </Router>
+        </MuiThemeProvider>
     )
 }
 
