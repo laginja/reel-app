@@ -34,7 +34,7 @@ class History {
     // filter the array - remove element if it already exists
     filterIfExists(element) {
         this.items = this.items.filter(item => {
-            return item.title !== element.title;
+            return item.id !== element.id;
         })
     }
 

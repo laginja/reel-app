@@ -8,13 +8,15 @@ html {
     /* 1 rem = 16px */
     /* with this base conversion, 1 rem is 16px * .625 = 10px */
     //font-size: 62.5%;
+    height: 100%;
 }
 
 body {
     color: $dark-grey;
     font-family: Helvetica, Arial, sans-serif;
     //font-size: $m-size;
-    line-height: 1.6;
+    //line-height: 1.6;
+    height: 100%;
 }
 
 button {

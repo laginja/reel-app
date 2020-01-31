@@ -62,6 +62,7 @@ const Notifications = () => {
                     notifications.filter(not => not.read === false).length > 0
                         ? (
                             <Badge badgeContent={notifications.filter(not => not.read === false).length}
+                                max={10}
                                 color="secondary">
                                 <NotificationsIcon />
                             </Badge>

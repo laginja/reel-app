@@ -5,6 +5,33 @@ import { startFetchUser } from '../../actions/users';
 import usersReducer from '../../reducers/users';
 import AuditionsContext from '../../context/audition-context';
 
+// MUI
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles({
+    card: {
+        minWidth: 275,
+        margin: '10px 5px' 
+    },
+    bullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(0.8)',
+    },
+    title: {
+        fontSize: 14,
+    },
+    pos: {
+        marginBottom: 12,
+    },
+});
+
 const AuditionListItem = ({ audition }) => {
     /* get dispatchAuditions function from the AuditionsContext */
     const { dispatchAuditions } = useContext(AuditionsContext)
@@ -21,19 +48,34 @@ const AuditionListItem = ({ audition }) => {
         startFetchUser(audition.ownerId, dispatchOwner)
     }, [audition.ownerId])
 
+    const classes = useStyles();
+
     return (
-        <div className="list-item">
-            <Link to={`audition/${audition.id}`}>
-                <h3>{audition.title}</h3>
-            </Link>
-            <h5>Created by
-                <Link to={`user/${owner.uid}`}>
-                    {owner.displayName}
-                </Link>
-            </h5>
-            <button onClick={removeAudition}>X</button>
-        </div>
+        <Grid item xs={12} sm={3}>
+            <Card className={classes.card}>
+                <CardContent>
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        {audition.category}
+                    </Typography>
+                    <Typography variant="h5" component={Link} to={`audition/${audition.id}`}>
+                        {audition.title}
+                    </Typography>
+                    <Typography className={classes.pos} color="textSecondary" component={"p"}>
+                        Posted by: <Link to={`user/${owner.uid}`}>{owner.displayName}</Link>
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        {audition.description.substring(0, 20)}...
+                    <br />
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small" component={Link} to={`audition/${audition.id}`}>Learn More</Button>
+                </CardActions>
+                <CardActions>
+                    <Button size="small" onClick={removeAudition}>X</Button>
+                </CardActions>
+            </Card>
+        </Grid>
     )
 }
-
 export { AuditionListItem as default }

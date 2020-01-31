@@ -7,7 +7,7 @@ const ReelsDashboardPage = () => {
 
     return (
         <div>
-            <div className="main__navigation">
+            <div>
                 <h1>Browse</h1>
                 <button className="button" onClick={() => setSelection('auditions')}>Auditions</button>
                 <button className="button" onClick={() => setSelection('people')}>People</button>

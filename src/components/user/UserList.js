@@ -8,7 +8,7 @@ const UserList = () => {
     /* get filtered Users */
     const usersFiltered = selectUsers(users, filters)
     return (
-        <div className="list-body">
+        <div>
             {users.length === 0 ? (
                 <p>0 users</p>
             ) : (

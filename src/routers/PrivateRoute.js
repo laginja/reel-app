@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { firebase } from '../firebase/firebase';
 import AuthContext from '../context/auth-context';
@@ -6,7 +6,10 @@ import BrowsingHistory from '../components/browsing history/BrowsingHistory'
 import Header from '../components/navigation/Header';
 import RecommendedAuditions from '../components/RecommendedAuditions';
 
-const PrivateRoute = ({ component: Component, componentName, ...rest}) => {
+// MUI
+import Grid from '@material-ui/core/Grid';
+
+const PrivateRoute = ({ component: Component, componentName, ...rest }) => {
     /* get user that is logged-in */
     const currentUser = firebase.auth().currentUser
 
@@ -14,24 +17,33 @@ const PrivateRoute = ({ component: Component, componentName, ...rest}) => {
         <AuthContext.Provider value={{ currentUser }}>
             <Route {...rest} component={(props) => (
                 !!currentUser ? (
-                    <div>
+                    <Fragment>
                         <Header />
                         <div className="container">
-                            <div className="content-main">
-                                <div className="content-main__item-narrow">
+                            <Grid container>
+                                <Grid item xs={12} sm={2}>
                                     <RecommendedAuditions />
-                                </div>
-                                <div className="content-main__item-wide">
-                                    <Component {...props}/>
-                                    {!componentName ? <BrowsingHistory /> : ""}                           
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
+                                </Grid>
+                                <Grid item xs={12} sm={10}>
+                                    <Grid
+                                        container
+                                        justify="space-between"
+                                    >
+                                        <Grid item sm={12}>
+                                            <Component {...props} />
+                                        </Grid>
+                                        <Grid item sm={12}>
+                                            {!componentName ? <BrowsingHistory /> : ""}                                           
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </div>
+                    </Fragment>
                 ) : (
-                    <Redirect to='/' />
-                )
-            )}/>
+                        <Redirect to='/' />
+                    )
+            )} />
         </AuthContext.Provider>
     )
 }

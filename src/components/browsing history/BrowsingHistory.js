@@ -11,9 +11,16 @@ const BrowsingHistory = () => {
         if (recentHistory)
             setHistory(recentHistory.reverse())
     }, [])
+
+    const footer = {
+        position: "fixed",
+        bottom: "0",
+        visibility: "visible",
+        background: "#6cf"
+    };
     
     return (
-        <div>
+        <div style={footer}>
             <h3>Recently visited</h3>
             {
                 history.map((item) => (
