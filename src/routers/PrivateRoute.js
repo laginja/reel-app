@@ -27,6 +27,7 @@ const PrivateRoute = ({ component: Component, componentName, ...rest }) => {
                                 <Grid item xs={12} sm={10}>
                                     <Grid
                                         container
+                                        direction="column"
                                         justify="space-between"
                                     >
                                         <Grid item sm={12}>
