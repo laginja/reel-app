@@ -21,6 +21,8 @@ const AuditionList = () => {
     const classes = useStyles();
 
     return (
+        <div>
+
         <Grid container className={classes.list}>
             {auditions.length === 0 ? (
                 <p>0 auditions</p>
@@ -30,6 +32,7 @@ const AuditionList = () => {
                 ))
             )}
         </Grid>
+        </div>
     )
 }
     

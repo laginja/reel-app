@@ -6,7 +6,7 @@ const ReelsDashboardPage = () => {
     const [selection, setSelection] = useState('auditions');
 
     return (
-        <div>
+        <div className="main">
             <div>
                 <h1>Browse</h1>
                 <button className="button" onClick={() => setSelection('auditions')}>Auditions</button>

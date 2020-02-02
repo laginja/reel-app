@@ -78,6 +78,7 @@ const Notifications = () => {
                 )
         )
     }
+    
 
     let notificationsMarkup = (
         notifications && notifications.length > 0 ? (
