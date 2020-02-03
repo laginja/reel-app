@@ -49,7 +49,7 @@ const UserProfilePage = (props) => {
     }, [uid])
 
     return (
-        <div className="content-main__item-wide">
+        <div>
             <div className="user-profile__cover">
                 
             </div>

@@ -11,7 +11,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import IconButton from '@material-ui/core/IconButton';
-import AddAlertIcon from '@material-ui/icons/AddAlert';
 import Typography from '@material-ui/core/Typography';
 
 const Notifications = () => {
@@ -30,13 +29,14 @@ const Notifications = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+        handleNotificationsOpen();
     };
 
     const handleNotificationsOpen = () => {
         // mark notifications as read
-        notifications.map(not => not.read = true)
+        notifications.map(not => not.read = true);
         // update notifications in DB
-        markNotificationsRead(userId, notifications)
+        markNotificationsRead(userId, notifications);
     }
 
     // this mounts and unmounts as user visits new routes
@@ -45,13 +45,13 @@ const Notifications = () => {
         let onNotificationChange;
         // subscribe to notifications and resolve with the callback function
         startSubscribeToNotifications(userId, setNotifications).then(func => {
-            setLoaded(true)
-            onNotificationChange = func
+            setLoaded(true);
+            onNotificationChange = func;
         })
 
         return () => {
             // unsubscribe from notifications by passing the callback function
-            unSubscribeToNotifications(userId, onNotificationChange)
+            unSubscribeToNotifications(userId, onNotificationChange);
         }
     }, [userId])
 
@@ -78,7 +78,7 @@ const Notifications = () => {
                 )
         )
     }
-    
+
 
     let notificationsMarkup = (
         notifications && notifications.length > 0 ? (
@@ -86,7 +86,7 @@ const Notifications = () => {
                 //const verb = not.type === 'applied' ? 'applied' : 'something';
                 const time = moment(not.time).fromNow();
                 const iconColor = not.read ? 'primary' : 'secondary';
-                const icon = <AddAlertIcon color={iconColor} style={{ marginRight: 10 }} />
+                const icon = <NotificationsIcon color={iconColor} style={{ marginRight: 10 }} />
 
                 return (
                     <MenuItem key={not.time} onClick={handleClose}>
@@ -96,7 +96,9 @@ const Notifications = () => {
                             variant="body1"
                             to={`/audition/${not.auditionId}`}
                         >
-                            {not.senderName} applied to {not.auditionTitle} {time}
+                            <span className="notifications__markup"><span className="notifications__markup--bold">{not.senderName}</span> applied to
+                            <span className="notifications__markup--bold"> {not.auditionTitle.substring(0, 20)}...</span> {time}</span>
+                            <hr/>
                         </Typography>
                     </MenuItem>
                 )
@@ -120,7 +122,10 @@ const Notifications = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                onEntered={handleNotificationsOpen}
+                
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
             >
                 {notificationsMarkup}
             </Menu>

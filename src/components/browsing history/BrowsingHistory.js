@@ -23,7 +23,7 @@ const BrowsingHistory = () => {
     };
 
     return (
-        <Grid container style={footer} direction="column">
+        <Grid container direction="column">
             <Grid item xs={12}>
                 <h3>Recently visited</h3>
             </Grid>

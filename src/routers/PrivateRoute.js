@@ -22,7 +22,9 @@ const PrivateRoute = ({ component: Component, componentName, ...rest }) => {
                         <div className="container">
                             <Grid container>
                                 <Grid item xs={12} sm={2}>
-                                    <RecommendedAuditions />
+                                    <div className="container-fixed">
+                                        <RecommendedAuditions />
+                                    </div>
                                 </Grid>
                                 <Grid item xs={12} sm={10}>
                                     <Grid
