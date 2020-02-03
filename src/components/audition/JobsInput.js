@@ -2,6 +2,11 @@ import React from 'react';
 
 /* TODO refactor this using a reducer and useReducer */
 
+//MUI
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const jobId = `job-${job.id}`;
     const descriptionId = `descriptionId-${job.id}`;
@@ -13,30 +18,37 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
 
     return (
         <div key={`member-${job.id}`} className="crew-member-input">
-            <div className="crew-member-input__header">
-                <h3>Member #{index + 1}</h3>
-                <button className="button button--remove" onClick={handleRemovejob}>X</button>
+            <div>
+                <TextField
+                    value={job.job}
+                    required
+                    name="job"
+                    inputProps={{ 'data-idx': `${index}` }}
+                    id={jobId}
+                    label="Position"
+                    onChange={handleJobInputChange} />
             </div>
-            <input
-                type="text"
-                name="job"
-                placeholder="Job"
-                data-idx={index}
-                id={jobId}
-                className="text-input"
-                value={job.job}
-                onChange={handleJobInputChange}
-            />
-            <textarea
-                type="textarea"
-                name="description"
-                placeholder="Description"
-                data-idx={index}
-                id={descriptionId}
-                className="text-input"
-                value={job.description}
-                onChange={handleJobInputChange}
-            />
+            <div>
+                <TextField
+                    value={job.description}
+                    required
+                    name="description"
+                    inputProps={{ 'data-idx': `${index}` }}
+                    id={descriptionId}
+                    label="Job description"
+                    onChange={handleJobInputChange} />
+            </div>
+            <div>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    size="small"
+                    onClick={handleRemovejob}
+                    startIcon={<DeleteIcon />}
+                >
+                    Remove job
+                </Button>
+            </div>
         </div>
     );
 };

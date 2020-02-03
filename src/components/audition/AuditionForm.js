@@ -8,6 +8,48 @@ import JobsInput from './JobsInput';
 import 'react-dates/lib/css/_datepicker.css'
 import 'react-dates/initialize' // imported to clear the error I was getting
 
+// MUI 
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        padding: '16px 0',
+        '& .MuiTextField-root': {
+            margin: theme.spacing(1),
+            width: 400,
+        },
+    },
+    success: {
+        color: '#fff',
+        background: '#10B91F',
+        'margin-top': "20px"
+    }
+}));
+
+const categories = [
+    {
+        value: 'Action',
+        label: 'Action',
+    },
+    {
+        value: 'Drama',
+        label: 'Drama',
+    },
+    {
+        value: 'Comedy',
+        label: 'Comedy',
+    },
+    {
+        value: 'Horror',
+        label: 'Horror',
+    },
+];
+
 const AuditionForm = (props) => {
     /* 
         'useState()' returns an array with 2 items -> 1st current state value that's gonna change over time, 
@@ -21,7 +63,7 @@ const AuditionForm = (props) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [createdAt, setCreatedAt] = useState(moment())
-    const [category, setCategory] = useState('')
+    const [category, setCategory] = useState('Action')
     const [auditionDate, setAuditionDate] = useState(moment())
     const [calendarFocused, setCalendarFocus] = useState(false)
     const [location, setLocation] = useState('')
@@ -85,7 +127,7 @@ const AuditionForm = (props) => {
             })
         }
     };
-    
+
     useEffect(() => {
         // check whether we are editing or creating a new audition
         setTitle(props.audition ? props.audition.title : '')
@@ -94,56 +136,76 @@ const AuditionForm = (props) => {
         setCategory(props.audition ? props.audition.category : '')
         setAuditionDate(props.audition ? moment(props.audition.auditionDate) : moment())
         setLocation(props.audition ? props.audition.location : '')
-        setPaid(props.audition ? props.audition.paid : false)      
+        setPaid(props.audition ? props.audition.paid : false)
         if (props.audition) {
             dispatchJobs(setJobInputs(props.audition.jobs))
         }
     }, [props.audition])
 
+    //MUI
+    const classes = useStyles();
+
     return (
-        <form className="form" onSubmit={onSubmit}>
+        <form className={classes.root} onSubmit={onSubmit}>
             {error && <p className="form__error">{error}</p>}
-            <h3>General</h3>
-            <input
-                value={title}
-                className="text-input"
-                placeholder="Title"
-                onChange={(e) => setTitle(e.target.value)}
-            />
-            <textarea
-                value={description}
-                className="textarea"
-                placeholder="Audition Description"
-                onChange={(e) => setDescription(e.target.value)}
-            />
-            <input
-                value={category}
-                className="text-input"
-                placeholder="Category"
-                onChange={(e) => setCategory(e.target.value)}
-            />
-            <SingleDatePicker
-                placeholder="Audition Date"
-                date={auditionDate}
-                onDateChange={onDateChange}
-                focused={calendarFocused}
-                onFocusChange={onFocusChange}
-                numberOfMonths={1}
-                block
-            />
-            <input
-                value={location}
-                className="text-input"
-                placeholder="Location"
-                onChange={(e) => setLocation(e.target.value)}
-            />
-            <h3>Jobs</h3>
             <div>
-                <button className="button" onClick={addJob}>New job</button>
+                <TextField
+                    value={title}
+                    required
+                    id="standard-required-title"
+                    label="Title"
+                    onChange={(e) => setTitle(e.target.value)} />
             </div>
+            <div>
+                <TextField
+                    value={description}
+                    required
+                    id="standard-multiline-flexible"
+                    multiline
+                    label="Description"
+                    onChange={(e) => setDescription(e.target.value)} />
+            </div>
+            <div>
+                <TextField
+                    id="standard-select-category"
+                    required
+                    select
+                    label="Category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    helperText="Select category"
+                >
+                    {categories.map(option => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </div>
+            <div>
+                <SingleDatePicker
+                    placeholder="Audition Date"
+                    date={auditionDate}
+                    onDateChange={onDateChange}
+                    focused={calendarFocused}
+                    onFocusChange={onFocusChange}
+                    numberOfMonths={1}
+                    block
+                />
+            </div>
+            <div>
+                <TextField
+                    value={location}
+                    required
+                    id="standard-required-location"
+                    label="Location"
+                    onChange={(e) => setLocation(e.target.value)} />
+            </div>
+
+            <h3>Jobs</h3>
             {
                 jobs.map((job, idx) => {
-                    props.audition ? job.id = props.audition.jobs[idx].id : job.id = idx 
+                    props.audition ? job.id = props.audition.jobs[idx].id : job.id = idx
                     return (
                         <JobsInput
                             key={job.id}
@@ -156,10 +218,29 @@ const AuditionForm = (props) => {
                 })
             }
             <div>
-                <input className="button button--add" type="submit" value={props.audition ? "Edit audition" : "Add Audition"} />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    onClick={addJob}
+                    startIcon={<WorkOutlineIcon />}
+                >
+                    New job
+                </Button>
+
+            </div>
+            <div>
+                <Button
+                    variant="contained"
+                    className={classes.success}
+                    type="submit"
+                    size="medium"
+                    startIcon={<CheckCircleOutlineIcon />}
+                >
+                   {props.audition ? "Edit audition" : "Create Audition"}
+                </Button>    
             </div>
         </form>
-    )
-}
-
-export { AuditionForm as default }
+            )
+        }   
+export {AuditionForm as default}

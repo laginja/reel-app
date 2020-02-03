@@ -5,7 +5,7 @@ import AuditionForm from './AuditionForm';
 const AddAuditionPage = (props) => {
     return (
         <div className="content-main__item-wide">
-            <h3>New audition</h3>
+            <h3>Create Audition</h3>
             <AuditionForm 
                 onSubmit={(audition) => {
                     /* TODO: Do I need to dispatch to the store in here ??? */
