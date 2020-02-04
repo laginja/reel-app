@@ -79,7 +79,6 @@ const Notifications = () => {
         )
     }
 
-
     let notificationsMarkup = (
         notifications && notifications.length > 0 ? (
             notifications.map(not => {
@@ -92,13 +91,10 @@ const Notifications = () => {
                     <MenuItem key={not.time} onClick={handleClose}>
                         {icon}
                         <Typography
-                            component={Link}
                             variant="body1"
-                            to={`/audition/${not.auditionId}`}
                         >
-                            <span className="notifications__markup"><span className="notifications__markup--bold">{not.senderName}</span> applied to
-                            <span className="notifications__markup--bold"> {not.auditionTitle.substring(0, 20)}...</span> {time}</span>
-                            <hr/>
+                            <span className="notifications__markup"><span className="notifications__markup--bold"><Link to={`/user/${not.senderId}`}>{not.senderName}</Link></span> applied to
+                            <span className="notifications__markup--bold"> <Link to={`/audition/${not.auditionId}`}>{not.auditionTitle.substring(0, 20)}...</Link></span> {time}</span>
                         </Typography>
                     </MenuItem>
                 )

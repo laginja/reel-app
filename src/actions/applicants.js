@@ -11,7 +11,7 @@ export const applyToJob = (applicant) => {
 /* Triggers when a user applies for a job in an audition  */
 export const startApplyToJob = (job, userId, userName, ownerId, auditionTitle, time, dispatchApplicants) => {
 
-    const { auditionId, id: jobId, job: jobTitle } = job
+    const { auditionId, id: jobId, position: jobTitle } = job
 
     const applyToJobPromise = (() => {
         return new Promise((resolve) => {

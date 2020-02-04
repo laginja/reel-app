@@ -1,0 +1,23 @@
+.jobs-input {
+    border: 1px solid #333333;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    margin: $s-size 0;
+    width: 450px;
+    padding: 0 10px;
+
+    > * {
+        margin-bottom: $s-size;
+    } 
+
+    > div > Button {
+        margin-left: 8px;
+    }
+}
+
+
+.crew-member-input__header {
+    display: flex;
+    align-items: center;
+}

@@ -37,8 +37,9 @@ export const startAddAudition = (auditionData = {}) => {
         const auditionId = ref.key
 
         jobs.forEach((job) => {
-            job.auditionId = auditionId
-            database.ref(`jobs/`).push(job).then((ref) => {
+            const newJob = { auditionId, ...job };
+
+            database.ref(`jobs/`).push(newJob).then((ref) => {
                 database.ref(`auditions/${auditionId}/jobs`).push(ref.key)
             })
         })
@@ -58,10 +59,10 @@ export const removeAudition = (id) => {
 /* Triggers when a user deletes an audition */
 /* When deleting an audition we need to delete audition data in multiple objects */
 export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
-    const { 
-        id: auditionId, 
-        ownerId, 
-        jobs 
+    const {
+        id: auditionId,
+        ownerId,
+        jobs
     } = audition
 
     const deleteAuditionPromise = (() => {
@@ -69,20 +70,20 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
 
             // array to store applicants which need to be deleted
             const applicantsToRemove = []
-        
+
             // array to store jobs which need to be deleted
             const jobsToRemove = []
-        
+
             // iterate over jobs collection of an audition in order to get all applicants 
             for (var job in jobs) {
                 // get each job's id
                 const jobId = jobs[job]
-        
+
                 // query for that job in the 'jobs' object
                 database.ref(`jobs/${jobId}`).once('value').then((snapshot) => {
                     // add the job ID to the jobsToRemove array because we need to remove those jobs from the 'users' object
                     jobsToRemove.push(jobId)
-        
+
                     // iterate through job's applicants
                     for (var applicant in snapshot.val().applicants) {
                         // get applicantId
@@ -109,15 +110,15 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
                     })
                 })
             }
-        
+
             // remove audition from the 'auditions' object
             database.ref(`auditions/${auditionId}`).remove().then(() => {
-        
+
                 // remove the same audition from the 'users' object
                 // fetch all auditions of the owner
                 database.ref(`users/${ownerId}/auditions`).once('value').then((snapshot) => {
                     let auditionToRemove = undefined
-        
+
                     // iterate over user's auditions
                     snapshot.forEach((childSnapshot) => {
                         // find the one that has the value of deleted audition
@@ -126,7 +127,7 @@ export const startRemoveAudition = (audition = {}, dispatchAuditions) => {
                             auditionToRemove = childSnapshot.key
                         }
                     })
-        
+
                     // remove audition from the 'users' object based on the key
                     database.ref(`users/${ownerId}/auditions/${auditionToRemove}`).remove().then(() => {
                         dispatchAuditions(removeAudition(auditionId));
@@ -153,6 +154,7 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
         location = '',
         paid = 'false',
         jobs = [],
+        jobsToRemove = [],
         ownerId = null
     } = auditionData;
 
@@ -175,7 +177,22 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
             const promises = []
 
             jobs.forEach((job) => {
-                promises.push(database.ref(`jobs/${job.id}`).update(job))
+                const {
+                    description,
+                    id,
+                    isNew,
+                    position
+                } = job;
+
+                const updatedJob = { auditionId, description, id, position };
+                console.log(isNew)
+                if (isNew) {
+                    database.ref(`jobs/`).push(updatedJob).then((ref) => {
+                        database.ref(`auditions/${auditionId}/jobs`).push(ref.key)
+                    })
+                } else {
+                    promises.push(database.ref(`jobs/${id}`).update(updatedJob))
+                }
             })
 
             // resolve with an array of promises
@@ -192,7 +209,61 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
         })
     })
 
+    // Promise to remove jobs from objects in DB
+    const removeJobsPromise = (() => {
+        return new Promise((resolve) => {
+            let applicantsToRemove = [];
+            if (jobsToRemove.length > 0) {
+                // remove job from jobs
+                jobsToRemove.forEach(jobId => {
+                    // query for that job in the 'jobs' object
+                    database.ref(`jobs/${jobId}`).once('value').then((snapshot) => {
+                        // iterate through job's applicants
+                        for (var applicant in snapshot.val().applicants) {
+                            // get applicantId
+                            const applicantId = snapshot.val().applicants[applicant]
+                            // push that ID to the array because we need to know which users have applied for the job
+                            applicantsToRemove.push(applicantId)
+                        }
+                        // remove the job from the DB
+                        database.ref(`jobs/${jobId}`).remove().then(() => {
+                            // remove job from 'auditions'
+                            database.ref(`auditions/${auditionId}/jobs`).once('value').then((snapshot) => {
+                                // iterate over users job application
+                                snapshot.forEach((childSnapshot) => {
+                                    // check if job application is in jobsToRemove array
+                                    if (jobsToRemove.includes(childSnapshot.val())) {
+                                        // remove job application from 'users' object
+                                        database.ref(`auditions/${auditionId}/jobs/${childSnapshot.key}`).remove()
+                                    }
+                                })
+                            })
+
+                            // iterate over users that have applied for the job
+                            applicantsToRemove.forEach((applicant) => {
+                                // find their applications
+                                database.ref(`users/${applicant}/applications`).once('value').then((snapshot) => {
+                                    // iterate over users job application
+                                    snapshot.forEach((childSnapshot) => {
+                                        // check if job application is in jobsToRemove array
+                                        if (jobsToRemove.includes(childSnapshot.val())) {
+                                            // remove job application from 'users' object
+                                            database.ref(`users/${applicant}/applications/${childSnapshot.key}`).remove()
+                                        }
+                                    })
+                                })
+                            })
+                        })
+                    })
+                })
+            }
+            resolve()
+        })
+    })
+
     updateAuditionPromise().then(() => {
+        return removeJobsPromise()
+    }).then(() => {
         return fillJobsArrayPromise()
     }).then((promises) => {
         return updateJobsPromise(promises)

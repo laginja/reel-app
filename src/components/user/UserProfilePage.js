@@ -64,7 +64,7 @@ const UserProfilePage = (props) => {
 
             { isUserOwner() ? <h3>My applications</h3> : <h3>{user.displayName}'s application</h3>}
             { userJobApplicationsLoaded ? (userJobApplications.map((userJobApplication) => {
-                return <Link to={`/audition/${userJobApplication.auditionId}`} key={userJobApplication.id}><h5>{userJobApplication.job}</h5></Link>
+                return <Link to={`/audition/${userJobApplication.auditionId}`} key={userJobApplication.id}><h5>{userJobApplication.position}</h5></Link>
             }) ) : <Loading />}
         </div>
     )

@@ -17,12 +17,12 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     };
 
     return (
-        <div key={`member-${job.id}`} className="crew-member-input">
+        <div key={`member-${job.id}`} className="jobs-input">
             <div>
                 <TextField
-                    value={job.job}
+                    value={job.position}
                     required
-                    name="job"
+                    name="position"
                     inputProps={{ 'data-idx': `${index}` }}
                     id={jobId}
                     label="Position"

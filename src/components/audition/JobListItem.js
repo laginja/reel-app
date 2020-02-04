@@ -47,7 +47,7 @@ const JobListItem = ({ job, ownerId, auditionTitle }) => {
 
     return (
         <div >
-            <h3>{job.job}</h3>
+            <h3>{job.position}</h3>
             <p>{job.description}</p>
             {hasApplied ? <button variant="outline-danger" onClick={unapplyFromJob}>Applied</button> : <button variant="success" onClick={applyToJob}>Apply</button>}
             {applicants.length === 0 ? (

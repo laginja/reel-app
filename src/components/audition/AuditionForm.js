@@ -20,8 +20,8 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: '16px 0',
         '& .MuiTextField-root': {
-            margin: theme.spacing(1),
-            width: 400,
+            'margin-top': theme.spacing(1),
+            width: '100%',
         },
     },
     success: {
@@ -71,48 +71,67 @@ const AuditionForm = (props) => {
     const [error, setError] = useState('')
 
     // create state for crew members input 
-    const jobInput = { id: '', job: '', description: '' };
+    const jobInput = { id: '', position: '', description: '', isNew: false };
     const [jobs, dispatchJobs] = useReducer(jobsInputReducer, []);
+
+    // we need to be able to manipulate jobs in order to remove them so we store them in a state
+    const [jobsArray, setJobsArray] = useState([])
+
+    // state to store all job ids that need to be removed. We pass is an an object property to the correct action
+    const [jobsToRemove, setJobsToRemove] = useState([]);
 
     const onDateChange = (auditionDate) => {
         if (auditionDate) {
-            setAuditionDate(auditionDate)
+            setAuditionDate(auditionDate);
         }
     };
 
     const onFocusChange = ({ focused }) => {
-        setCalendarFocus(focused)
+        setCalendarFocus(focused);
     };
 
     // Add Crew member field 
     const addJob = (e) => {
-        e.preventDefault()
-        dispatchJobs(addJobInput(jobInput))
+        e.preventDefault();
+        dispatchJobs(addJobInput(jobInput));
     };
 
     // Remove Crew member field 
     const removeJob = (e, { id }) => {
-        e.preventDefault()
-        dispatchJobs(removeJobInput(id))
+        e.preventDefault();
+
+        // remove job from the state
+        setJobsArray(jobsArray.filter(item => {
+            return item.id !== id;
+        }))
+        // lay out all job ids that need to be removed in a new array
+        let jobsArrayToRemove = [...jobsToRemove];
+        // append the id of a job to be removed to the new array
+        if (typeof id === 'string')
+            jobsArrayToRemove.push(id)
+        // set new jobsToRemove state
+        setJobsToRemove(jobsArrayToRemove)
+
+        dispatchJobs(removeJobInput(id));
     };
 
     // Update jobs state on input change 
     const handleJobInputChange = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         const jobInputs = [...jobs];
         jobInputs[e.target.dataset.idx][e.target.name] = e.target.value;
-        dispatchJobs(setJobInputs(jobInputs))
+        dispatchJobs(setJobInputs(jobInputs));
     };
 
     // Submit new audition
     const onSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         const { uid } = currentUser;
 
         // check for title and body
         if (!title || !description) {
-            setError('Please fill the form')
+            setError('Please fill the form');
         } else {
             props.onSubmit({
                 title: title,
@@ -123,6 +142,7 @@ const AuditionForm = (props) => {
                 location: location,
                 paid: paid,
                 jobs: jobs,
+                jobsToRemove: jobsToRemove,
                 ownerId: uid
             })
         }
@@ -130,16 +150,17 @@ const AuditionForm = (props) => {
 
     useEffect(() => {
         // check whether we are editing or creating a new audition
-        setTitle(props.audition ? props.audition.title : '')
-        setDescription(props.audition ? props.audition.description : '')
-        setCreatedAt(props.audition ? moment(props.audition.createdAt) : moment())
-        setCategory(props.audition ? props.audition.category : '')
-        setAuditionDate(props.audition ? moment(props.audition.auditionDate) : moment())
-        setLocation(props.audition ? props.audition.location : '')
-        setPaid(props.audition ? props.audition.paid : false)
+        setTitle(props.audition ? props.audition.title : '');
+        setDescription(props.audition ? props.audition.description : '');
+        setCreatedAt(props.audition ? moment(props.audition.createdAt) : moment());
+        setCategory(props.audition ? props.audition.category : '');
+        setAuditionDate(props.audition ? moment(props.audition.auditionDate) : moment());
+        setLocation(props.audition ? props.audition.location : '');
+        setPaid(props.audition ? props.audition.paid : false);
         if (props.audition) {
-            dispatchJobs(setJobInputs(props.audition.jobs))
+            dispatchJobs(setJobInputs(props.audition.jobs));
         }
+        setJobsArray(props.audition ? props.audition.jobs : [])
     }, [props.audition])
 
     //MUI
@@ -205,7 +226,14 @@ const AuditionForm = (props) => {
             <h3>Jobs</h3>
             {
                 jobs.map((job, idx) => {
-                    props.audition ? job.id = props.audition.jobs[idx].id : job.id = idx
+                    // check if audition has props (then we're coming from edit audition) and if the audition has jobs
+                    if (props.audition && jobsArray[idx]) {                  
+                            job.id = jobsArray[idx].id;
+                            job.isNew = false;
+                    } else {
+                        job.id = idx;
+                        job.isNew = true
+                    }
                     return (
                         <JobsInput
                             key={job.id}
