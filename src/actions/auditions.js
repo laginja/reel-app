@@ -282,9 +282,24 @@ export const setAuditions = (auditions) => {
 };
 
 /* Triggers when user visits the AllAuditionsPage */
-export const startSetAuditions = (dispatchAuditions) => {
+export const startSetAuditions = (dispatchAuditions, setReferenceToOldestKey) => {
+    return database.ref('auditions/')
+        .orderByKey()
+        .once('value')
+        .then((snapshot) => {
+            const auditions = [];
 
-    return database.ref(`auditions/`).once('value').then((snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                auditions.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+            });
+            dispatchAuditions(setAuditions(auditions.reverse()))
+            console.log(auditions[auditions.length - 1].id)
+            setReferenceToOldestKey(auditions[auditions.length - 1])
+        })
+    /* return database.ref(`auditions/`).once('value').then((snapshot) => {
         const auditions = [];
 
         snapshot.forEach((childSnapshot) => {
@@ -294,7 +309,7 @@ export const startSetAuditions = (dispatchAuditions) => {
             });
         });
         dispatchAuditions(setAuditions(auditions))
-    });
+    }); */
 };
 
 /* Set audition to the component state */
@@ -435,7 +450,6 @@ export const startFetchUserAuditions = (userId, dispatchAuditions) => {
 
 /* Fetch auditions from the DB for the given user */
 export const startFetchUserJobApplications = (userId, dispatchAuditions) => {
-
     const fetchUserJobApplicationsPromise = (() => {
         return new Promise((resolve) => {
             // get all user application

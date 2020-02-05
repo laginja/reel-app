@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 });
 
 const AuditionList = () => {
-    const { auditions, filters } = useContext(AuditionsContext)
+    const { auditions, filters, lastAuditionElementRef } = useContext(AuditionsContext)
     /* get filtered Auditions */
     const auditionsFiltered = selectAuditions(auditions, filters)
 
@@ -22,18 +22,21 @@ const AuditionList = () => {
 
     return (
         <div>
-
-        <Grid container className={classes.list}>
-            {auditions.length === 0 ? (
-                <p>0 auditions</p>
-            ) : (
-                auditionsFiltered.map((audition) => (
-                    <AuditionListItem key={audition.id} audition={audition} />
-                ))
-            )}
-        </Grid>
+            <Grid container className={classes.list}>
+                {auditions.length === 0 ? (
+                    <p>0 auditions</p>
+                ) : (
+                        auditionsFiltered.map((audition, index) => {
+                            if (auditionsFiltered.length === index + 1) {
+                                return <AuditionListItem ref={lastAuditionElementRef} key={audition.id} audition={audition} />
+                            }
+                            return <AuditionListItem key={audition.id} audition={audition} />
+                        }
+                        )
+                    )}
+            </Grid>
         </div>
     )
 }
-    
+
 export default AuditionList;
