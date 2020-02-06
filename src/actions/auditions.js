@@ -273,7 +273,11 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
     })
 };
 
-/* SetAuditions - return an object that gets dispatched to change the state */
+/**
+ * This will set initially loaded auditions to the state
+ * 
+ * @param {[]} auditions 
+ */
 export const setAuditions = (auditions) => {
     return {
         type: 'POPULATE_AUDITIONS',
@@ -281,10 +285,21 @@ export const setAuditions = (auditions) => {
     };
 };
 
-/* Triggers when user visits the AllAuditionsPage */
-export const startSetAuditions = (dispatchAuditions, setReferenceToOldestKey) => {
-    return database.ref('auditions/')
+/**
+ * Triggered when user visits the homepage to fetch initial set of data to display
+ * 
+ * @param {function} dispatchAuditions 
+ * @param {function} setReferenceToOldest 
+ * @param {function} setHasMore 
+ * @param {function} setLoading 
+ */
+export const startInitialSetAuditions = (dispatchAuditions, setReferenceToOldest, setHasMore, setLoading) => {
+    // set how many auditions we want to fetch initially
+    const numberToFetch = 16;
+    // query DB for most recent auditions (inserted last into DB) ordering them by key (this will order them by having the most recent audition in the last place)
+    database.ref('auditions/')
         .orderByKey()
+        .limitToLast(numberToFetch)
         .once('value')
         .then((snapshot) => {
             const auditions = [];
@@ -295,21 +310,72 @@ export const startSetAuditions = (dispatchAuditions, setReferenceToOldestKey) =>
                     ...childSnapshot.val()
                 });
             });
-            dispatchAuditions(setAuditions(auditions.reverse()))
-            console.log(auditions[auditions.length - 1].id)
-            setReferenceToOldestKey(auditions[auditions.length - 1])
-        })
-    /* return database.ref(`auditions/`).once('value').then((snapshot) => {
-        const auditions = [];
+            // after fetching auditions reverse their order so the most recent audition gets placed on the first place
+            auditions.reverse()
+            dispatchAuditions(setAuditions(auditions))
+            // check whether we fetch any auditions. If so then find the last audition and mark it as the audition from which next query needs to fetch more auditions
+            if (auditions.length !== 0) {
+                setReferenceToOldest(auditions[auditions.length - 1].id)
+            }
 
-        snapshot.forEach((childSnapshot) => {
-            auditions.push({
-                id: childSnapshot.key,
-                ...childSnapshot.val()
+            // if we fetch less than the 'numberToFetch' then we don't have any more auditions in the DB
+            setHasMore(auditions.length > 0 && auditions.length >= numberToFetch)
+            setLoading(false)
+        })
+};
+
+/**
+ * Append the newly fetched auditions to the existing auditions state
+ * 
+ * @param {[]} auditions 
+ */
+export const setMoreAuditions = (auditions) => {
+    return {
+        type: 'APPEND_AUDITIONS',
+        auditions: auditions
+    };
+};
+
+/**
+ * Triggers once the user scrolls down the list of auditions. This functions loads auditions 'as-we-go' and appends them to the state
+ * 
+ * @param {function} dispatchAuditions 
+ * @param {function} setReferenceToOldest 
+ * @param {function} setHasMore 
+ * @param {function} setLoading 
+ */
+export const startFetchMoreAuditions = (dispatchAuditions, referenceToOldest, setReferenceToOldest, setHasMore, setLoading) => {
+    // set how many auditions we want to fetch on each new scroll. Increment that number by 1 because the last audition is a duplicate and it will get removed 
+    const numberToFetch = 9;
+    // query DB for most recent auditions (inserted last into DB) but start from the audition marked as 'the oldest'
+    database.ref('auditions/')
+        .orderByKey()
+        .endAt(referenceToOldest)
+        .limitToLast(numberToFetch)
+        .once('value')
+        .then((snapshot) => {
+            let auditions = [];
+
+            snapshot.forEach((childSnapshot) => {
+                auditions.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
             });
-        });
-        dispatchAuditions(setAuditions(auditions))
-    }); */
+
+            // after fetching auditions sort them, reverse their order so the most recent audition gets placed on the first place and remove the last one since it's the one we
+            // started with (.endAt() includes the audition we specifie as the last one)
+            auditions = auditions.sort().reverse().slice(1)
+            dispatchAuditions(setMoreAuditions(auditions))
+            // check whether we fetch any auditions. If so then find the last audition and mark it as the audition from which next query needs to fetch more auditions
+            if (auditions.length !== 0) {
+                setReferenceToOldest(auditions[auditions.length - 1].id)
+            }
+
+            // if we fetch less than the 'numberToFetch - 1' then we don't have any more auditions in the DB
+            setHasMore(auditions.length > 0 && auditions.length >= numberToFetch-1)
+            setLoading(false)
+        })
 };
 
 /* Set audition to the component state */

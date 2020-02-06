@@ -8,6 +8,11 @@ const auditionsReducer = (state, action) => {
                 ...state,
                 action.audition
             ];
+        case 'APPEND_AUDITIONS':
+            return [
+                ...state,
+                ...action.auditions
+            ];
         case 'REMOVE_AUDITION':
             return state.filter((audition) => audition.id !== action.id);
         case 'FIND_AUDITION':

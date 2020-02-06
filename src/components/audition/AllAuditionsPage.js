@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState, useRef, useCallback } from 'react';
+import React, { useReducer, useState, useRef, useCallback } from 'react';
 import { filtersReducer, filtersReducerDefaultState } from '../../reducers/filters';
 import auditionsReducer from '../../reducers/auditions';
 //import AuthContext from '../context/auth-context';
@@ -6,7 +6,8 @@ import Loading from '../Loading';
 import AuditionList from './AuditionList';
 import AuditionListFilters from './AuditionListFilters';
 import AuditionsContext from '../../context/audition-context';
-import { startSetAuditions } from '../../actions/auditions';
+
+import useAuditionSearch from '../../hooks/useAuditionSearch';
 
 const AllAuditionsPage = () => {
     //const { currentUser } = useContext(AuthContext)
@@ -14,42 +15,37 @@ const AllAuditionsPage = () => {
     // create states and provide dispatch function for the reducer to update that state
     const [auditions, dispatchAuditions] = useReducer(auditionsReducer, [])
     const [filters, dispatchFilters] = useReducer(filtersReducer, filtersReducerDefaultState)
+    // number to keep track when we need to load more auditions
+    const [pageNumber, setPageNumber] = useState(1)
 
-    /* State to track if auditions have been loaded */
-    const [auditionsLoaded, setAuditionsLoaded] = useState(false)
-
-    // Inifinite scroll
-    const [referenceToOldestKey, setReferenceToOldestKey] = useState();
+    const {
+        hasMore,
+        loading,
+        error
+    } = useAuditionSearch(pageNumber, dispatchAuditions)
 
     const observer = useRef()
     const lastAuditionElementRef = useCallback(node => {
-        //if (loading) return
+        if (loading) return
         if (observer.current) observer.current.disconnect()
         observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting) {
-                //setPageNumber(prevPageNumber => prevPageNumber + 1)
-                console.log(entries[0])
+            if (entries[0].isIntersecting && hasMore) {
+                // this means we scrolled to the last element therefore increase the pageNumber to fetch more auditions
+                setPageNumber(prevPageNumber => prevPageNumber + 1)
             }
         })
         if (node) observer.current.observe(node)
-    }, [])
-
-    /* Fires only once when the component mounts (or the user gets set) */
-    useEffect(() => {
-        /* Start async call to get auditions from the DB */
-        startSetAuditions(dispatchAuditions, setReferenceToOldestKey).then(() => {
-            /* auditions have been loaded, set to true*/
-            setAuditionsLoaded(true)
-            //console.log(auditions.length - 1)
-            //setReferenceToOldestKey(auditions.length - 1)
-        })
-    }, [])
+    }, [loading, hasMore])
 
     return (
-        <AuditionsContext.Provider value={{ auditions, dispatchAuditions, filters, dispatchFilters, lastAuditionElementRef }}>
-            <AuditionListFilters />
-            {auditionsLoaded ? <AuditionList /> : <Loading />}
-        </AuditionsContext.Provider>
+        <div>
+            <AuditionsContext.Provider value={{ auditions, dispatchAuditions, filters, dispatchFilters, lastAuditionElementRef }}>
+                <AuditionListFilters />
+                <AuditionList />
+            </AuditionsContext.Provider>
+            <div>{loading && <Loading />}</div>
+            <div>{error && 'Error'}</div>
+        </div>
     )
 }
 
