@@ -6,8 +6,9 @@ class History {
     MAX_ITEMS = 5; 
     
     constructor(obj) {
-        if (obj)
+        if (obj) {
             this.items = obj.items
+        }
         else
             this.items = [];
     }

@@ -15,13 +15,6 @@ const BrowsingHistory = () => {
             setHistory(recentHistory.reverse())
     }, [])
 
-    const footer = {
-        position: "fixed",
-        bottom: "0",
-        width: "100%",
-        background: "#eaeaea"
-    };
-
     return (
         <Grid container direction="column">
             <Grid item xs={12}>

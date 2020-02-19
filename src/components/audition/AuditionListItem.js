@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     card: {
-        minWidth: 275,
+        Width: 275,
         margin: '10px 5px'
     },
     title: {
@@ -51,7 +51,7 @@ const AuditionListItem = React.forwardRef(({ audition }, ref) => {
     const classes = useStyles();
 
     return (
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
             <div ref={ref}>
                 <Card className={classes.card}>
                     <CardContent>
