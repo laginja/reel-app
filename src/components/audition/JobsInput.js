@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const jobId = `job-${job.id}`;
@@ -17,6 +19,10 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
         {
             value: 'Actor',
             label: 'Actor',
+        },
+        {
+            value: 'Editor',
+            label: 'Editor',
         }
     ];
 
@@ -28,25 +34,25 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     return (
         <div key={`member-${job.id}`} className="jobs-input">
             <div>
-                <Select
+            <FormControl>
+                <NativeSelect
                     value={job.position}
                     required
                     name="position"
-                    
                     id={jobId}
-                    label="Position"
-                    onChange={e => handleJobInputChange(e)}
-                    select
+                    
                     inputProps={{ 'data-idx': `${index}` }}
+                    onChange={handleJobInputChange("idx")}
                 >
                     {positions.map(option => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <option key={option.value} value={option.value}>
                             {option.label}
-                        </MenuItem>
+                        </option>
                     ))}
-                </Select>
+                </NativeSelect>
+                </FormControl>
             </div>
-            <div>
+            {/* <div>
                 <TextField
                     value={job.position}
                     required
@@ -55,7 +61,7 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
                     id={jobId}
                     label="Position"
                     onChange={handleJobInputChange} />
-            </div>
+            </div> */}
             <div>
                 <TextField
                     value={job.description}
