@@ -117,6 +117,7 @@ const AuditionForm = (props) => {
 
     // Update jobs state on input change 
     const handleJobInputChange = (e) => {
+        console.log(e.target.dataset)
         e.preventDefault();
         const jobInputs = [...jobs];
         jobInputs[e.target.dataset.idx][e.target.name] = e.target.value;

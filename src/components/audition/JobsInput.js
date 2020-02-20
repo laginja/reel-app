@@ -6,10 +6,19 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const jobId = `job-${job.id}`;
     const descriptionId = `descriptionId-${job.id}`;
+
+    const positions = [
+        {
+            value: 'Actor',
+            label: 'Actor',
+        }
+    ];
 
     /* Remove Job */
     const handleRemovejob = (e) => {
@@ -18,6 +27,25 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
 
     return (
         <div key={`member-${job.id}`} className="jobs-input">
+            <div>
+                <Select
+                    value={job.position}
+                    required
+                    name="position"
+                    
+                    id={jobId}
+                    label="Position"
+                    onChange={e => handleJobInputChange(e)}
+                    select
+                    inputProps={{ 'data-idx': `${index}` }}
+                >
+                    {positions.map(option => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </div>
             <div>
                 <TextField
                     value={job.position}
