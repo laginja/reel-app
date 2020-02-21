@@ -178,13 +178,14 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
 
             jobs.forEach((job) => {
                 const {
+                    age,
                     description,
                     id,
                     isNew,
                     position
                 } = job;
 
-                const updatedJob = { auditionId, description, id, position };
+                const updatedJob = { auditionId, description, id, position, age };
                 console.log(isNew)
                 if (isNew) {
                     database.ref(`jobs/`).push(updatedJob).then((ref) => {
