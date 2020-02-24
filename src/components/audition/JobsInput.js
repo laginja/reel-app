@@ -9,7 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
-const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
+const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionSpecificData }) => {
     const defaultInputs = {
         age: '',
         roleType: ''
@@ -69,8 +69,9 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
 
     const [positionSelect, setPositionSelect] = useState('');
     const [positionSpecificData, setPositionSpecificData] = useState({ defaultInputs })
-
+    
     const onPositionChange = e => {
+        resetPositionSpecificData(e)
         setPositionSelect(e.target.value)
         setPositionSpecificData(defaultInputs)
         handleJobInputChange(e)

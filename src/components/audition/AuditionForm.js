@@ -124,14 +124,21 @@ const AuditionForm = (props) => {
         e.preventDefault();
         const jobInputs = [...jobs];
         jobInputs[e.target.dataset.idx][e.target.name] = e.target.value;
-
-        if (jobInputs[e.target.dataset.idx]["position"] !== "Actor" ) {
-            jobInputs[e.target.dataset.idx]["age"] = 0;    
-            jobInputs[e.target.dataset.idx]["roleType"] = '';
-        }
-        console.log(jobInputs[e.target.dataset.idx][e.target.name])
         dispatchJobs(setJobInputs(jobInputs));
     };
+
+    const resetPositionSpecificData = (e) => {
+        const position = e.target.value;
+        const jobInputs = [...jobs];
+        switch(position) {
+            case "Actor":
+                jobInputs[e.target.dataset.idx]["age"] = 0;    
+                jobInputs[e.target.dataset.idx]["roleType"] = '';
+                break;
+
+        }
+        dispatchJobs(setJobInputs(jobInputs));
+    }
 
     // Submit new audition
     const onSubmit = (e) => {
@@ -251,6 +258,7 @@ const AuditionForm = (props) => {
                             job={job}
                             removeJob={removeJob}
                             handleJobInputChange={handleJobInputChange}
+                            resetPositionSpecificData={resetPositionSpecificData}
                         />
                     )
                 })
