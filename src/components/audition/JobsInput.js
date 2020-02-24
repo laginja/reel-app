@@ -11,7 +11,8 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 
 const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const defaultInputs = {
-        age: ''
+        age: '',
+        roleType: ''
     }
 
     const positions = [
@@ -46,13 +47,29 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
         }
     ];
 
+    const actorRoles = [
+        {
+            value: '',
+            label: '',
+        },
+        {
+            value: 'Lead',
+            label: 'Lead',
+        },
+        {
+            value: 'Supporting',
+            label: 'Supporting',
+        }
+    ];
+
     const jobId = `job-${job.id}`;
     const descriptionId = `descriptionId-${job.id}`;
     const ageId = `ageId-${job.id}`;
+    const roleId = `roleId-${job.id}`;
 
-    const [positionSelect, setPositionSelect] = useState(''); 
-    const [positionSpecificData, setPositionSpecificData] = useState({defaultInputs})
-    
+    const [positionSelect, setPositionSelect] = useState('');
+    const [positionSpecificData, setPositionSpecificData] = useState({ defaultInputs })
+
     const onPositionChange = e => {
         setPositionSelect(e.target.value)
         setPositionSpecificData(defaultInputs)
@@ -63,7 +80,7 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
         const value = e.target.value
         setPositionSpecificData({
             ...positionSpecificData,
-            [e.target.name] : value
+            [e.target.name]: value
         })
         handleJobInputChange(e)
     }
@@ -84,13 +101,33 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     const renderActorDetails = () => {
         return (
             <div>
-                <TextField
-                    value={positionSpecificData.age}
-                    name="age"
-                    inputProps={{ 'data-idx': `${index}` }}
-                    id={ageId}
-                    label="Age"
-                    onChange={handleInputChange} />
+                <div>
+                    <TextField
+                        value={positionSpecificData.age}
+                        name="age"
+                        inputProps={{ 'data-idx': `${index}` }}
+                        id={ageId}
+                        label="Age"
+                        onChange={handleInputChange} />
+                </div>
+                <div>
+                    <FormControl>
+                        <NativeSelect
+                            value={positionSpecificData.roleType}
+                            required
+                            name="roleType"
+                            id={roleId}
+                            inputProps={{ 'data-idx': `${index}` }}
+                            onChange={handleInputChange}
+                        >
+                            {actorRoles.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </FormControl>
+                </div>
             </div>
         )
     }
@@ -107,7 +144,8 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange }) => {
     useEffect(() => {
         setPositionSelect(job.position)
         setPositionSpecificData({
-            age: job.age
+            age: job.age,
+            roleType: job.roleType
         })
     }, [job])
 

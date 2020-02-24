@@ -71,7 +71,7 @@ const AuditionForm = (props) => {
     const [error, setError] = useState('')
 
     // create state for crew members input 
-    const jobInput = { id: '', position: '', description: '', age: '', isNew: false };
+    const jobInput = { id: '', position: '', description: '', age: '', roleType: '', isNew: false };
     const [jobs, dispatchJobs] = useReducer(jobsInputReducer, []);
 
     // we need to be able to manipulate jobs in order to remove them so we store them in a state
@@ -124,6 +124,11 @@ const AuditionForm = (props) => {
         e.preventDefault();
         const jobInputs = [...jobs];
         jobInputs[e.target.dataset.idx][e.target.name] = e.target.value;
+
+        if (jobInputs[e.target.dataset.idx]["position"] !== "Actor" ) {
+            jobInputs[e.target.dataset.idx]["age"] = 0;    
+            jobInputs[e.target.dataset.idx]["roleType"] = '';
+        }
         console.log(jobInputs[e.target.dataset.idx][e.target.name])
         dispatchJobs(setJobInputs(jobInputs));
     };

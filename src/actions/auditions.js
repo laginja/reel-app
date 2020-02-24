@@ -182,10 +182,11 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
                     description,
                     id,
                     isNew,
-                    position
+                    position,
+                    roleType
                 } = job;
 
-                const updatedJob = { auditionId, description, id, position, age };
+                const updatedJob = { auditionId, description, id, position, age, roleType };
                 console.log(isNew)
                 if (isNew) {
                     database.ref(`jobs/`).push(updatedJob).then((ref) => {
