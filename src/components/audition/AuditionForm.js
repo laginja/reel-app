@@ -71,7 +71,7 @@ const AuditionForm = (props) => {
     const [error, setError] = useState('')
 
     // create state for crew members input 
-    const jobInput = { id: '', position: '', description: '', age: '', roleType: '', isNew: false };
+    const jobInput = { id: '', position: '', description: '', compensation: 'Paid', isNew: false };
     const [jobs, dispatchJobs] = useReducer(jobsInputReducer, []);
 
     // we need to be able to manipulate jobs in order to remove them so we store them in a state
@@ -117,26 +117,48 @@ const AuditionForm = (props) => {
 
     // Update jobs state on input change 
     const handleJobInputChange = (e) => {
-        console.log(e)
-        console.log(e.target.dataset.idx)
-        console.log(e.target.name)
-        console.log(e.target.value)
         e.preventDefault();
         const jobInputs = [...jobs];
         jobInputs[e.target.dataset.idx][e.target.name] = e.target.value;
         dispatchJobs(setJobInputs(jobInputs));
     };
 
-    const resetPositionSpecificData = (e) => {
-        const position = e.target.value;
+    // gets called when the user switches between positions (Actor, editor, camera,...) for the job. This is used to reset the data
+    // that was passed to the position specific data and to set the defaults for the position
+    const resetPositionSpecificData = (position, e) => {
         const jobInputs = [...jobs];
-        switch(position) {
+        // position contains the previous job position. This way when a jos is inserted, only data specific to that position is inserted
+        // and the rest is reset
+        switch (position) {
             case "Actor":
-                jobInputs[e.target.dataset.idx]["age"] = 0;    
+                jobInputs[e.target.dataset.idx]["age"] = '';
+                jobInputs[e.target.dataset.idx]["ethnicity"] = '';
+                jobInputs[e.target.dataset.idx]["gender"] = '';
                 jobInputs[e.target.dataset.idx]["roleType"] = '';
+                break;
+            case "Editor":
+                jobInputs[e.target.dataset.idx]["experience"] = '';
+                break;
+            default:
+                break;
+        }
+
+        // find the new position and insert default values into the object
+        switch (e.target.value) {
+            case "Actor":
+                jobInputs[e.target.dataset.idx]["age"] = '';
+                jobInputs[e.target.dataset.idx]["ethnicity"] = 'All Ethnicities';
+                jobInputs[e.target.dataset.idx]["gender"] = 'All Genders';
+                jobInputs[e.target.dataset.idx]["roleType"] = 'Lead';
+                break;
+            case "Editor":
+                jobInputs[e.target.dataset.idx]["experience"] = '';
+                break;
+            default:
                 break;
 
         }
+
         dispatchJobs(setJobInputs(jobInputs));
     }
 
@@ -244,9 +266,9 @@ const AuditionForm = (props) => {
             {
                 jobs.map((job, idx) => {
                     // check if audition has props (then we're coming from edit audition) and if the audition has jobs
-                    if (props.audition && jobsArray[idx]) {                  
-                            job.id = jobsArray[idx].id;
-                            job.isNew = false;
+                    if (props.audition && jobsArray[idx]) {
+                        job.id = jobsArray[idx].id;
+                        job.isNew = false;
                     } else {
                         job.id = idx;
                         job.isNew = true
@@ -283,10 +305,10 @@ const AuditionForm = (props) => {
                     size="medium"
                     startIcon={<CheckCircleOutlineIcon />}
                 >
-                   {props.audition ? "Edit audition" : "Create Audition"}
-                </Button>    
+                    {props.audition ? "Edit audition" : "Create Audition"}
+                </Button>
             </div>
         </form>
-            )
-        }   
-export {AuditionForm as default}
+    )
+}
+export { AuditionForm as default }

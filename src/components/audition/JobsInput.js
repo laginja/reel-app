@@ -1,77 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import { defaultInputs, positions, actorRoles, genders, ethnicities, compensations } from '../../helpers/jobInputsSpecificData';
 
 /* TODO refactor this using a reducer and useReducer */
 
 //MUI
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import TextField from '@material-ui/core/TextField';
 
 const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionSpecificData }) => {
-    const defaultInputs = {
-        age: '',
-        roleType: ''
-    }
-
-    const positions = [
-        {
-            value: '',
-            label: '',
-        },
-        {
-            value: 'Actor',
-            label: 'Actor',
-        },
-        {
-            value: 'Editor',
-            label: 'Editor',
-        },
-        {
-            value: 'Producer',
-            label: 'Producer',
-        }
-        ,
-        {
-            value: 'Camera',
-            label: 'Camera',
-        },
-        {
-            value: 'Sound designer',
-            label: 'Sound designer',
-        },
-        {
-            value: 'Composer',
-            label: 'Composer',
-        }
-    ];
-
-    const actorRoles = [
-        {
-            value: '',
-            label: '',
-        },
-        {
-            value: 'Lead',
-            label: 'Lead',
-        },
-        {
-            value: 'Supporting',
-            label: 'Supporting',
-        }
-    ];
-
     const jobId = `job-${job.id}`;
     const descriptionId = `descriptionId-${job.id}`;
+    const compensationId = `compensationId-${job.id}`;
+
+    // Actor
     const ageId = `ageId-${job.id}`;
     const roleId = `roleId-${job.id}`;
+    const genderId = `genderId-${job.id}`;
+    const ethnicityId = `ethnicityId-${job.id}`;
+
+    // Editor
+    const experienceId = `experienceId-${job.id}`;
 
     const [positionSelect, setPositionSelect] = useState('');
     const [positionSpecificData, setPositionSpecificData] = useState({ defaultInputs })
-    
+
     const onPositionChange = e => {
-        resetPositionSpecificData(e)
+        resetPositionSpecificData(positionSelect, e)
         setPositionSelect(e.target.value)
         setPositionSpecificData(defaultInputs)
         handleJobInputChange(e)
@@ -92,8 +50,6 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
                 return renderActorDetails();
             case "Editor":
                 return renderEditorDetails();
-
-
             default:
                 break;
         }
@@ -103,25 +59,66 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
         return (
             <div>
                 <div>
+                    <FormControl>
+                        <InputLabel htmlFor={roleId}>Role Type</InputLabel>
+                        <NativeSelect
+                            id={roleId}
+                            inputProps={{ 'data-idx': `${index}` }}
+                            name="roleType"
+                            onChange={handleInputChange}
+                            required
+                            value={positionSpecificData.roleType}
+                        >
+                            {actorRoles.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </FormControl>
+                </div>
+                <div>
                     <TextField
-                        value={positionSpecificData.age}
-                        name="age"
-                        inputProps={{ 'data-idx': `${index}` }}
                         id={ageId}
+                        inputProps={{ 'data-idx': `${index}` }}
                         label="Age"
-                        onChange={handleInputChange} />
+                        name="age"
+                        onChange={handleInputChange}
+                        value={positionSpecificData.age}
+                        type="number"
+                    />
                 </div>
                 <div>
                     <FormControl>
+                        <InputLabel htmlFor={genderId}>Gender</InputLabel>
                         <NativeSelect
-                            value={positionSpecificData.roleType}
-                            required
-                            name="roleType"
-                            id={roleId}
+                            id={genderId}
                             inputProps={{ 'data-idx': `${index}` }}
+                            name="gender"
                             onChange={handleInputChange}
+                            required
+                            value={positionSpecificData.gender}
                         >
-                            {actorRoles.map(option => (
+                            {genders.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                    </FormControl>
+                </div>
+                <div>
+                    <FormControl>
+                        <InputLabel htmlFor={ethnicityId}>Ethnicity</InputLabel>
+                        <NativeSelect
+                            id={ethnicityId}
+                            inputProps={{ 'data-idx': `${index}` }}
+                            name="ethnicity"
+                            onChange={handleInputChange}
+                            required
+                            value={positionSpecificData.ethnicity}
+                        >
+                            {ethnicities.map(option => (
                                 <option key={option.value} value={option.value}>
                                     {option.label}
                                 </option>
@@ -134,19 +131,36 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
     }
 
     const renderEditorDetails = () => {
-        return <div>Editor</div>
+        return (
+            <div>
+                <TextField
+                    inputProps={{ 'data-idx': `${index}` }}
+                    id={experienceId}
+                    label="Years of experience"
+                    name="experience"
+                    onChange={handleInputChange}
+                    value={positionSpecificData.experience}
+                    type="number"
+                />
+            </div>
+        )
     }
 
-    /* Remove Job */
+    // Remove Job 
     const handleRemovejob = (e) => {
         removeJob(e, job);
     };
 
     useEffect(() => {
+    
         setPositionSelect(job.position)
         setPositionSpecificData({
             age: job.age,
-            roleType: job.roleType
+            compensation: job.compensation,
+            ethnicity: job.ethnicity,
+            gender: job.gender,
+            roleType: job.roleType,
+            experience: job.experience
         })
     }, [job])
 
@@ -154,15 +168,35 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
         <div key={`member-${job.id}`} className="jobs-input">
             <div>
                 <FormControl>
+                    <InputLabel htmlFor={jobId}>Position</InputLabel>
                     <NativeSelect
-                        value={job.position}
-                        required
-                        name="position"
                         id={jobId}
                         inputProps={{ 'data-idx': `${index}` }}
+                        name="position"
                         onChange={onPositionChange}
+                        required
+                        value={job.position}
                     >
                         {positions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </NativeSelect>
+                </FormControl>
+            </div>
+            <div>
+                <FormControl>
+                    <InputLabel htmlFor={compensationId}>Compensation</InputLabel>
+                    <NativeSelect
+                        id={compensationId}
+                        inputProps={{ 'data-idx': `${index}` }}
+                        name="compensation"
+                        onChange={handleInputChange}
+                        required
+                        value={job.compensation}
+                    >
+                        {compensations.map(option => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
                             </option>
@@ -175,21 +209,22 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
             }
             <div>
                 <TextField
-                    value={job.description}
-                    required
-                    name="description"
-                    inputProps={{ 'data-idx': `${index}` }}
                     id={descriptionId}
+                    inputProps={{ 'data-idx': `${index}` }}
                     label="Job description"
-                    onChange={handleJobInputChange} />
+                    name="description"
+                    onChange={handleJobInputChange}
+                    required
+                    value={job.description}
+                />
             </div>
             <div>
                 <Button
-                    variant="contained"
                     color="secondary"
-                    size="small"
                     onClick={handleRemovejob}
+                    size="small"
                     startIcon={<DeleteIcon />}
+                    variant="contained"
                 >
                     Remove job
                 </Button>

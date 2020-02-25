@@ -152,13 +152,13 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
         category = '',
         auditionDate = 0,
         location = '',
-        paid = 'false',
+        compensation = '',
         jobs = [],
         jobsToRemove = [],
         ownerId = null
     } = auditionData;
 
-    const audition = { title, description, createdAt, category, auditionDate, location, paid, ownerId }
+    const audition = { title, description, createdAt, category, auditionDate, compensation, location, ownerId }
 
     // Promise to update the audition in DB
     const updateAuditionPromise = (() => {
@@ -178,16 +178,19 @@ export const startEditAudition = (auditionId, auditionData = {}) => {
 
             jobs.forEach((job) => {
                 const {
-                    age,
-                    description,
+                    age = '',
+                    description = '',
+                    ethnicity = '',
+                    experience = '', 
+                    gender = '',
                     id,
                     isNew,
-                    position,
-                    roleType
+                    position = '',
+                    roleType = ''
                 } = job;
 
-                const updatedJob = { auditionId, description, id, position, age, roleType };
-                console.log(isNew)
+                const updatedJob = { auditionId, description, id, position, age, ethnicity, gender, roleType, experience };
+                
                 if (isNew) {
                     database.ref(`jobs/`).push(updatedJob).then((ref) => {
                         database.ref(`auditions/${auditionId}/jobs`).push(ref.key)
