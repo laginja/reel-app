@@ -152,7 +152,6 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
     };
 
     useEffect(() => {
-    
         setPositionSelect(job.position)
         setPositionSpecificData({
             age: job.age,
@@ -186,6 +185,17 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
                 </FormControl>
             </div>
             <div>
+                <TextField
+                    id={descriptionId}
+                    inputProps={{ 'data-idx': `${index}` }}
+                    label="Job description"
+                    name="description"
+                    onChange={handleJobInputChange}
+                    required
+                    value={job.description}
+                />
+            </div>
+            <div>
                 <FormControl>
                     <InputLabel htmlFor={compensationId}>Compensation</InputLabel>
                     <NativeSelect
@@ -207,17 +217,7 @@ const JobsInput = ({ job, index, removeJob, handleJobInputChange, resetPositionS
             {
                 positionSelect !== "" ? renderSwitch(positionSelect) : ""
             }
-            <div>
-                <TextField
-                    id={descriptionId}
-                    inputProps={{ 'data-idx': `${index}` }}
-                    label="Job description"
-                    name="description"
-                    onChange={handleJobInputChange}
-                    required
-                    value={job.description}
-                />
-            </div>
+            
             <div>
                 <Button
                     color="secondary"

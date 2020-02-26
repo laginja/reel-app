@@ -3,7 +3,7 @@ import { startFetchAudition } from '../../actions/auditions';
 import moment from 'moment';
 import auditionsReducer from '../../reducers/auditions';
 import AuthContext from '../../context/auth-context'
-import JobsContext from '../../context/jobs-context';
+import AuditionJobsContext from '../../context/audition-jobs-context';
 import History from '../../helpers/history';
 import JobList from './JobList';
 import Loading from '../Loading';
@@ -97,9 +97,9 @@ const AuditionPage = (props) => {
                             </div>
                         ) : (
                                 /* TODO refactor audition to store it's ID */
-                                <JobsContext.Provider value={{ audition, auditionId }}>
+                                <AuditionJobsContext.Provider value={{ audition, auditionId }}>
                                     <JobList />
-                                </JobsContext.Provider>
+                                </AuditionJobsContext.Provider>
                             )
 
                     }

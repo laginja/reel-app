@@ -7,7 +7,7 @@ import AuditionList from './AuditionList';
 import AuditionListFilters from './AuditionListFilters';
 import AuditionsContext from '../../context/audition-context';
 
-import useAuditionSearch from '../../hooks/useAuditionSearch';
+import { useAuditionSearch } from '../../hooks/useSearch';
 
 const AllAuditionsPage = () => {
     //const { currentUser } = useContext(AuthContext)

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import JobsContext from '../../context/jobs-context';
+import AuditionJobsContext from '../../context/audition-jobs-context';
 import JobListItem from './JobListItem';
 
 const JobList = () => {
 
-    const { audition } = useContext(JobsContext)
+    const { audition } = useContext(AuditionJobsContext)
     const { ownerId, title } = audition
 
     return (

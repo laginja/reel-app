@@ -3,13 +3,13 @@ import { startApplyToJob, startUnapplyFromJob, startSetApplicants } from '../../
 import moment from 'moment';
 import applicantsReducer from '../../reducers/applicants';
 import AuthContext from '../../context/auth-context';
-import JobsContext from '../../context/jobs-context';
+import AuditionJobsContext from '../../context/audition-jobs-context';
 import JobApplicant from './JobApplicant';
 
 const JobListItem = ({ job, ownerId, auditionTitle }) => {
 
     const { currentUser } = useContext(AuthContext)
-    const { auditionId } = useContext(JobsContext)
+    const { auditionId } = useContext(AuditionJobsContext)
     const [applicants, dispatchApplicants] = useReducer(applicantsReducer, [])
 
     const { uid: userUid = null, displayName: userName = null } = currentUser
